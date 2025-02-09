@@ -96,23 +96,27 @@ const isValidThemeKey = (key: string | null): key is ThemeKey => {
 };
 
 export const useTheme = () => {
-  const [currentTheme, setCurrentTheme] = useState<ThemeKey>(() => {
-    const savedTheme = localStorage.getItem('themeKey');
-    return isValidThemeKey(savedTheme) ? savedTheme : 'gold';
-  });
-
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    return localStorage.getItem('isDarkMode') === 'true';
-  });
+  const [currentTheme, setCurrentTheme] = useState<ThemeKey>('gold');
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
-      localStorage.setItem('themeKey', currentTheme);
+    const savedTheme = localStorage.getItem('themeKey');
+    if (isValidThemeKey(savedTheme)) {
+      setCurrentTheme(savedTheme);
+    }
+    
+    const savedDarkMode = localStorage.getItem('isDarkMode');
+    if (savedDarkMode !== null) {
+      setIsDarkMode(savedDarkMode === 'true');
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('themeKey', currentTheme);
   }, [currentTheme]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('isDarkMode', String(isDarkMode));
-    }
+    localStorage.setItem('isDarkMode', String(isDarkMode));
   }, [isDarkMode]);
 
   const themeOptions = Object.entries(THEMES).map(([key, theme]) => ({
