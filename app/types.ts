@@ -1,3 +1,10 @@
+export interface NoteVersion {
+  title: string;
+  content: string;
+  tags: string[];
+  updatedAt: number;
+}
+
 export interface Note {
   id: string;
   title: string;
@@ -5,6 +12,7 @@ export interface Note {
   tags: string[];
   createdAt: number;
   updatedAt: number;
+  versions: NoteVersion[];
 }
 
 export interface NotesState {

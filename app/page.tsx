@@ -156,6 +156,9 @@ export default function Home() {
             />
             <Autocomplete
               multiple
+              autoHighlight
+              autoSelect
+              selectOnFocus
               options={tags}
               value={selectedTags}
               onChange={(_, newValue) => setSelectedTags(newValue)}

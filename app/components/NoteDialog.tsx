@@ -10,6 +10,9 @@ import Button from '@mui/material/Button';
 import Autocomplete from '@mui/material/Autocomplete';
 import Chip from '@mui/material/Chip';
 import { Note } from '../types';
+import { Box, Typography, IconButton } from '@mui/material';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
 interface NoteDialogProps {
   open: boolean;
@@ -29,6 +32,7 @@ export default function NoteDialog({
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [tags, setTags] = useState<string[]>([]);
+  const [currentVersionIndex, setCurrentVersionIndex] = useState<number>(-1);
   const titleRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -36,18 +40,55 @@ export default function NoteDialog({
       setTitle(existingNote.title);
       setContent(existingNote.content);
       setTags(existingNote.tags);
+      setCurrentVersionIndex(-1); // Reset to current version
     } else {
       setTitle('');
       setContent('');
       setTags([]);
+      setCurrentVersionIndex(-1);
     }
-    // Focus the title input after the dialog opens
     if (open) {
       setTimeout(() => {
         titleRef.current?.focus();
       }, 100);
     }
   }, [existingNote, open]);
+
+  const handleVersionChange = (direction: 'prev' | 'next') => {
+    if (!existingNote?.versions || !Array.isArray(existingNote.versions)) return;
+    
+    const versions = existingNote.versions;
+    let newIndex: number;
+    
+    if (currentVersionIndex === -1) {
+      // Currently on latest version, can only go back
+      newIndex = direction === 'prev' ? versions.length - 1 : -1;
+    } else {
+      // In history, can go either direction
+      newIndex = direction === 'prev' 
+        ? Math.max(0, currentVersionIndex - 1)
+        : Math.min(versions.length - 1, currentVersionIndex + 1);
+      
+      // If going forward and reached the end, show current version
+      if (direction === 'next' && newIndex === currentVersionIndex) {
+        newIndex = -1;
+      }
+    }
+    
+    if (newIndex === -1) {
+      // Show current version
+      setTitle(existingNote.title);
+      setContent(existingNote.content);
+      setTags(existingNote.tags);
+    } else {
+      // Show historical version
+      const version = versions[newIndex];
+      setTitle(version.title);
+      setContent(version.content);
+      setTags(version.tags);
+    }
+    setCurrentVersionIndex(newIndex);
+  };
 
   const normalizeTag = (tag: string) => tag.trim().toLowerCase();
 
@@ -61,7 +102,44 @@ export default function NoteDialog({
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogTitle>{existingNote ? 'Edit Note' : 'New Note'}</DialogTitle>
+      <DialogTitle>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Typography variant="h6" sx={{ flexGrow: 1 }}>
+            {existingNote ? 'Edit Note' : 'New Note'}
+          </Typography>
+          {existingNote && Array.isArray(existingNote.versions) && existingNote.versions.length > 0 && (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <IconButton
+                size="small"
+                onClick={() => handleVersionChange('prev')}
+                disabled={currentVersionIndex === 0}
+              >
+                <NavigateBeforeIcon />
+              </IconButton>
+              <Typography variant="body2" color="text.secondary">
+                {currentVersionIndex === -1 
+                  ? 'Current Version'
+                  : `Version ${currentVersionIndex + 1}/${existingNote.versions.length}`}
+              </Typography>
+              <IconButton
+                size="small"
+                onClick={() => handleVersionChange('next')}
+                disabled={currentVersionIndex === -1}
+              >
+                <NavigateNextIcon />
+              </IconButton>
+            </Box>
+          )}
+        </Box>
+        {existingNote && (
+          <Typography variant="caption" color="text.secondary">
+            Created {new Date(existingNote.createdAt).toLocaleString()}
+            {currentVersionIndex === -1 && existingNote.updatedAt !== existingNote.createdAt && (
+              <> • Last edited {new Date(existingNote.updatedAt).toLocaleString()}</>
+            )}
+          </Typography>
+        )}
+      </DialogTitle>
       <DialogContent>
         <TextField
           inputRef={titleRef}
@@ -84,6 +162,9 @@ export default function NoteDialog({
         <Autocomplete
           multiple
           freeSolo
+          autoHighlight
+          autoSelect
+          selectOnFocus
           options={availableTags}
           value={tags}
           onChange={(_, newValue) => {
