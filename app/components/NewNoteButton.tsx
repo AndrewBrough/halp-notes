@@ -3,6 +3,7 @@
 import React, { useEffect } from 'react';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
+import { Tooltip } from '@mui/material';
 import { SHORTCUTS, formatShortcut } from '../constants/shortcuts';
 
 interface NewNoteButtonProps {
@@ -24,13 +25,14 @@ export default function NewNoteButton({ onNewNote }: NewNoteButtonProps) {
   }, [onNewNote]);
 
   return (
-    <Fab
-      color="primary"
-      sx={{ position: 'fixed', bottom: 16, right: 16 }}
-      onClick={onNewNote}
-      aria-label={`Add new note (${formatShortcut(SHORTCUTS.NEW_NOTE.keys)})`}
-    >
-      <AddIcon />
-    </Fab>
+    <Tooltip title="New note (N)" arrow placement="top">
+      <Fab
+        color="primary"
+        sx={{ position: 'fixed', bottom: 16, right: 16 }}
+        onClick={onNewNote}
+      >
+        <AddIcon />
+      </Fab>
+    </Tooltip>
   );
 } 

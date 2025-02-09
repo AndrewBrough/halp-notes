@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -15,6 +15,7 @@ import ThemeProvider from '@mui/material/styles/ThemeProvider';
 import createTheme from '@mui/material/styles/createTheme';
 import CssBaseline from '@mui/material/CssBaseline';
 import { alpha } from '@mui/material/styles';
+import { Tooltip } from '@mui/material';
 
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -53,10 +54,10 @@ export default function Home() {
     setDialogOpen(true);
   };
 
-  const handleEditNote = (note: Note) => {
+  const handleEditNote = useCallback((note: Note) => {
     setEditingNote(note);
     setDialogOpen(true);
-  };
+  }, []);
 
   const handleSaveNote = (title: string, content: string, tags: string[]) => {
     if (editingNote) {
@@ -191,9 +192,28 @@ export default function Home() {
                   onMouseEnter={() => setHoveredNoteId(note.id)}
                   onMouseLeave={() => setHoveredNoteId(null)}
                   sx={{
+                    position: 'relative',
                     '& .note-actions': {
                       opacity: 0,
                       transition: 'opacity 0.2s ease-in-out',
+                      position: 'absolute',
+                      bottom: 8,
+                      right: 8,
+                      display: 'flex',
+                      gap: 0.5,
+                      zIndex: 1,
+                      '& .MuiIconButton-root': {
+                        backgroundColor: isDarkMode 
+                          ? theme.colors.dark.background 
+                          : theme.colors.light.background,
+                        padding: '4px',
+                        boxShadow: 2,
+                        '&:hover': {
+                          backgroundColor: isDarkMode 
+                            ? alpha(theme.colors.dark.primary, 0.1)
+                            : alpha(theme.colors.light.primary, 0.1),
+                        }
+                      }
                     },
                     '&:hover .note-actions': {
                       opacity: 1,
@@ -219,31 +239,45 @@ export default function Home() {
                     >
                       {note.content}
                     </Typography>
-                    <Box
-                      sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mb: 2 }}
-                    >
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                       {note.tags.map((tag) => (
                         <Chip key={tag} label={tag} size="small" />
                       ))}
                     </Box>
                     <Box
                       className="note-actions"
-                      sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}
+                      sx={{ 
+                        display: 'flex', 
+                        gap: 0.5,
+                        '& .MuiIconButton-root': {
+                          backgroundColor: isDarkMode 
+                            ? alpha(theme.colors.dark.primary, 0.1)
+                            : alpha(theme.colors.light.primary, 0.1),
+                          padding: '4px',
+                          '&:hover': {
+                            backgroundColor: isDarkMode 
+                              ? alpha(theme.colors.dark.primary, 0.2)
+                              : alpha(theme.colors.light.primary, 0.2),
+                          }
+                        }
+                      }}
                     >
-                      <IconButton
-                        size="small"
-                        onClick={() => handleEditNote(note)}
-                        title="Edit note (press 'E')"
-                      >
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        size="small"
-                        onClick={() => deleteNote(note.id)}
-                        title="Delete note (press 'D')"
-                      >
-                        <DeleteIcon />
-                      </IconButton>
+                      <Tooltip title="Edit note (E)" arrow placement="top">
+                        <IconButton
+                          size="small"
+                          onClick={() => handleEditNote(note)}
+                        >
+                          <EditIcon sx={{ fontSize: 16 }} />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Delete note (D)" arrow placement="top">
+                        <IconButton
+                          size="small"
+                          onClick={() => deleteNote(note.id)}
+                        >
+                          <DeleteIcon sx={{ fontSize: 16 }} />
+                        </IconButton>
+                      </Tooltip>
                     </Box>
                   </CardContent>
                 </Card>
