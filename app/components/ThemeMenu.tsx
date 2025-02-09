@@ -13,7 +13,7 @@ import DarkModeIcon from '@mui/icons-material/DarkMode';
 import type { ThemeOption } from '../hooks/useTheme';
 
 interface ThemeMenuProps {
-  currentTheme: ThemeOption;
+  currentTheme?: ThemeOption;
   isDarkMode: boolean;
   onThemeChange: (theme: ThemeOption) => void;
   onDarkModeChange: (isDark: boolean) => void;
@@ -66,7 +66,7 @@ export default function ThemeMenu({
               onThemeChange(option);
               handleClose();
             }}
-            selected={option.value === currentTheme.value}
+            selected={option.value === currentTheme?.value}
           >
             <ListItemIcon>
               <div

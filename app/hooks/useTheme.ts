@@ -96,11 +96,11 @@ const isValidThemeKey = (key: string | null): key is ThemeKey => {
 };
 
 export const useTheme = () => {
-  const [currentTheme, setCurrentTheme] = useState<ThemeKey>('gold');
+  const [currentTheme, setCurrentTheme] = useState<ThemeKey>();
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('themeKey');
+    const savedTheme = localStorage.getItem('themeKey') || 'gold';
     if (isValidThemeKey(savedTheme)) {
       setCurrentTheme(savedTheme);
     }
@@ -112,7 +112,7 @@ export const useTheme = () => {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('themeKey', currentTheme);
+    currentTheme && localStorage.setItem('themeKey', currentTheme);
   }, [currentTheme]);
 
   useEffect(() => {
@@ -127,8 +127,8 @@ export const useTheme = () => {
 
   return {
     theme: {
-      ...THEMES[currentTheme],
-      value: currentTheme
+      ...THEMES[currentTheme || 'gold'],
+      value: currentTheme || 'gold'
     },
     isDarkMode,
     setTheme: (option: ThemeOption) => setCurrentTheme(option.value as ThemeKey),
