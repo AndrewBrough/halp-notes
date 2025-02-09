@@ -53,10 +53,12 @@ export const MainMenu = () => {
             <KeyboardIcon sx={{ mr: 1 }} />
             Keyboard Shortcuts
           </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {SHORTCUTS.NEW_NOTE.description}:{' '}
-            <strong>{formatShortcut(SHORTCUTS.NEW_NOTE.keys)}</strong>
-          </Typography>
+          {Object.entries(SHORTCUTS).map(([key, shortcut]) => (
+            <Typography key={key} variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
+              {shortcut.description}:{' '}
+              <strong>{formatShortcut(shortcut.keys)}</strong>
+            </Typography>
+          ))}
         </MenuItem>
       </Menu>
     </>

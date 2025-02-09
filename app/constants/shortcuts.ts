@@ -1,9 +1,16 @@
 export const SHORTCUTS = {
   NEW_NOTE: {
-    keys: ['Ctrl/Cmd', 'Shift', 'N'],
+    keys: ['N'],
     description: 'Create new note'
+  },
+  EDIT_NOTE: {
+    keys: ['E'],
+    description: 'Edit hovered note'
+  },
+  DELETE_NOTE: {
+    keys: ['D'],
+    description: 'Delete hovered note'
   }
-  // We can add more shortcuts here in the future
 } as const;
 
 // Helper to format the shortcut for display

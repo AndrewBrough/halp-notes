@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -29,6 +29,7 @@ import { MainMenu } from './components/MainMenu';
 import SearchBar from './components/SearchBar';
 import TagSelector from './components/TagSelector';
 import NewNoteButton from './components/NewNoteButton';
+import { SHORTCUTS } from './constants/shortcuts';
 
 export default function Home() {
   const {
@@ -45,6 +46,7 @@ export default function Home() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingNote, setEditingNote] = useState<Note | undefined>();
   const [expandedNotes, setExpandedNotes] = useState<Set<string>>(new Set());
+  const [hoveredNoteId, setHoveredNoteId] = useState<string | null>(null);
 
   const handleAddNote = () => {
     setEditingNote(undefined);
@@ -75,6 +77,28 @@ export default function Home() {
       return newSet;
     });
   };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!hoveredNoteId) return;
+
+      if (e.key.toLowerCase() === 'e') {
+        const note = notes.find(n => n.id === hoveredNoteId);
+        if (note) {
+          e.preventDefault();
+          handleEditNote(note);
+        }
+      }
+      
+      if (e.key.toLowerCase() === 'd') {
+        e.preventDefault();
+        deleteNote(hoveredNoteId);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [hoveredNoteId, notes, handleEditNote, deleteNote]);
 
   const muiTheme = useMemo(() => createTheme({
     palette: {
@@ -163,7 +187,19 @@ export default function Home() {
           <Grid container spacing={2}>
             {notes.map((note) => (
               <Grid item xs={12} sm={6} md={4} key={note.id}>
-                <Card>
+                <Card
+                  onMouseEnter={() => setHoveredNoteId(note.id)}
+                  onMouseLeave={() => setHoveredNoteId(null)}
+                  sx={{
+                    '& .note-actions': {
+                      opacity: 0,
+                      transition: 'opacity 0.2s ease-in-out',
+                    },
+                    '&:hover .note-actions': {
+                      opacity: 1,
+                    },
+                  }}
+                >
                   <CardContent>
                     <Typography variant="h6" gutterBottom>
                       {note.title}
@@ -191,17 +227,20 @@ export default function Home() {
                       ))}
                     </Box>
                     <Box
+                      className="note-actions"
                       sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}
                     >
                       <IconButton
                         size="small"
                         onClick={() => handleEditNote(note)}
+                        title="Edit note (press 'E')"
                       >
                         <EditIcon />
                       </IconButton>
                       <IconButton
                         size="small"
                         onClick={() => deleteNote(note.id)}
+                        title="Delete note (press 'D')"
                       >
                         <DeleteIcon />
                       </IconButton>

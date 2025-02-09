@@ -12,8 +12,7 @@ interface NewNoteButtonProps {
 export default function NewNoteButton({ onNewNote }: NewNoteButtonProps) {
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
-      // Ctrl/Cmd + Shift + N to create new note
-      if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === 'N') {
+      if (event.key.toLowerCase() === 'n') {
         event.preventDefault();
         event.stopPropagation();
         onNewNote();
