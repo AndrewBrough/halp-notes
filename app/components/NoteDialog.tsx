@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -29,6 +29,7 @@ export default function NoteDialog({
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [tags, setTags] = useState<string[]>([]);
+  const titleRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (existingNote) {
@@ -40,11 +41,20 @@ export default function NoteDialog({
       setContent('');
       setTags([]);
     }
+    // Focus the title input after the dialog opens
+    if (open) {
+      setTimeout(() => {
+        titleRef.current?.focus();
+      }, 100);
+    }
   }, [existingNote, open]);
+
+  const normalizeTag = (tag: string) => tag.trim().toLowerCase();
 
   const handleSave = () => {
     if (title.trim() && content.trim()) {
-      onSave(title.trim(), content.trim(), tags);
+      const normalizedTags = tags.map(normalizeTag).filter(tag => tag !== '');
+      onSave(title.trim(), content.trim(), normalizedTags);
       onClose();
     }
   };
@@ -54,6 +64,7 @@ export default function NoteDialog({
       <DialogTitle>{existingNote ? 'Edit Note' : 'New Note'}</DialogTitle>
       <DialogContent>
         <TextField
+          inputRef={titleRef}
           autoFocus
           margin="dense"
           label="Title"
@@ -75,7 +86,27 @@ export default function NoteDialog({
           freeSolo
           options={availableTags}
           value={tags}
-          onChange={(_, newValue) => setTags(newValue)}
+          onChange={(_, newValue) => {
+            const normalizedTags = newValue
+              .map(normalizeTag)
+              .filter(tag => tag !== '');
+            setTags(Array.from(new Set(normalizedTags)));
+          }}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' && event.target instanceof HTMLInputElement) {
+              const inputValue = event.target.value.trim();
+              if (inputValue && !tags.includes(inputValue)) {
+                const normalizedTag = normalizeTag(inputValue);
+                if (normalizedTag) {
+                  setTags([...tags, normalizedTag]);
+                  // Clear the input
+                  event.target.value = '';
+                }
+              }
+              // Prevent default to avoid form submission
+              event.preventDefault();
+            }
+          }}
           renderTags={(value, getTagProps) =>
             value.map((option, index) => (
               <Chip
@@ -90,7 +121,7 @@ export default function NoteDialog({
               {...params}
               margin="dense"
               label="Tags"
-              placeholder="Add tags"
+              placeholder="Add tags (press Enter to add)"
             />
           )}
         />

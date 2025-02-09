@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Note, NotesState } from '../types';
 
 const STORAGE_KEY = 'notes-app-data';
@@ -48,63 +48,98 @@ const tutorialNotes: Note[] = [
   }
 ];
 
-const initialState: NotesState = {
-  notes: tutorialNotes,
-  tags: Array.from(new Set(tutorialNotes.flatMap(note => note.tags))),
+const getInitialState = (): NotesState => {
+  const computeInitialTags = (notes: Note[]) => {
+    return Array.from(new Set(notes.flatMap(note => 
+      note.tags.map(tag => tag.trim().toLowerCase())
+    )));
+  };
+
+  if (typeof window === 'undefined') {
+    return {
+      notes: tutorialNotes,
+      tags: computeInitialTags(tutorialNotes),
+    };
+  }
+
+  const savedData = localStorage.getItem(STORAGE_KEY);
+  if (savedData) {
+    const parsedData = JSON.parse(savedData);
+    return {
+      notes: parsedData.notes,
+      tags: computeInitialTags(parsedData.notes),
+    };
+  }
+
+  return {
+    notes: tutorialNotes,
+    tags: computeInitialTags(tutorialNotes),
+  };
 };
 
 export const useNotes = () => {
-  const [state, setState] = useState<NotesState>(initialState);
+  const [state, setState] = useState<NotesState>(getInitialState());
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    const savedData = localStorage.getItem(STORAGE_KEY);
-    if (savedData) {
-      setState(JSON.parse(savedData));
-    }
-  }, []);
-
-  useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }, [state]);
+
+  const normalizeTag = (tag: string) => tag.trim().toLowerCase();
+
+  const computeAllTags = (notes: Note[]) => {
+    console.log(notes);
+    return Array.from(new Set(notes.flatMap(note => 
+      note.tags.map(normalizeTag)
+    )));
+  };
 
   const addNote = (title: string, content: string, tags: string[]) => {
     const newNote: Note = {
       id: Date.now().toString(),
       title,
       content,
-      tags,
+      tags: tags.map(normalizeTag),
       createdAt: Date.now(),
       updatedAt: Date.now(),
     };
 
-    const newTags = Array.from(new Set([...state.tags, ...tags]));
-
-    setState(prev => ({
-      notes: [newNote, ...prev.notes],
-      tags: newTags,
-    }));
+    setState(prev => {
+      const updatedNotes = [newNote, ...prev.notes];
+      const updatedTags = computeAllTags(updatedNotes);
+      console.log({updatedTags, updatedNotes});
+      return {
+        notes: updatedNotes,
+        tags: updatedTags,
+      };
+    });
   };
 
   const updateNote = (id: string, title: string, content: string, tags: string[]) => {
-    const newTags = Array.from(new Set([...state.tags, ...tags]));
-
-    setState(prev => ({
-      notes: prev.notes.map(note =>
+    setState(prev => {
+      const updatedNotes = prev.notes.map(note =>
         note.id === id
-          ? { ...note, title, content, tags, updatedAt: Date.now() }
+          ? { ...note, title, content, tags: tags.map(normalizeTag), updatedAt: Date.now() }
           : note
-      ),
-      tags: newTags,
-    }));
+      );
+      const updatedTags = computeAllTags(updatedNotes);
+      return {
+        notes: updatedNotes,
+        tags: updatedTags,
+      };
+    });
   };
 
   const deleteNote = (id: string) => {
-    setState(prev => ({
-      ...prev,
-      notes: prev.notes.filter(note => note.id !== id),
-    }));
+    setState(prev => {
+      const updatedNotes = prev.notes.filter(note => note.id !== id);
+      const updatedTags = computeAllTags(updatedNotes);
+      return {
+        notes: updatedNotes,
+        tags: updatedTags,
+      };
+    });
   };
 
   const filteredNotes = state.notes.filter(note => {
