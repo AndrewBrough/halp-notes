@@ -30,6 +30,7 @@ import ClientOnly from './components/ClientOnly';
 import { MainMenu } from './components/MainMenu';
 import SearchBar from './components/SearchBar';
 import TagSelector from './components/TagSelector';
+import NewNoteButton from './components/NewNoteButton';
 
 export default function Home() {
   const {
@@ -213,13 +214,7 @@ export default function Home() {
             ))}
           </Grid>
 
-          <Fab
-            color="primary"
-            sx={{ position: 'fixed', bottom: 16, right: 16 }}
-            onClick={handleAddNote}
-          >
-            <AddIcon />
-          </Fab>
+          <NewNoteButton onNewNote={handleAddNote} />
 
           <NoteDialog
             open={dialogOpen}

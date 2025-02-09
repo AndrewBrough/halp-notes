@@ -100,6 +100,18 @@ export default function NoteDialog({
     }
   };
 
+  const handleSaveAndNew = () => {
+    if (title.trim() && content.trim()) {
+      const normalizedTags = tags.map(normalizeTag).filter(tag => tag !== '');
+      onSave(title.trim(), content.trim(), normalizedTags);
+      // Reset form but keep dialog open
+      setTitle('');
+      setContent('');
+      setTags([]);
+      titleRef.current?.focus();
+    }
+  };
+
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle>
@@ -208,8 +220,13 @@ export default function NoteDialog({
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={handleSave} variant="contained" color="primary">
+        <Button onClick={onClose} tabIndex={2}>Cancel</Button>
+        {!existingNote && (
+          <Button onClick={handleSaveAndNew} color="primary" tabIndex={1}>
+            Save & New
+          </Button>
+        )}
+        <Button onClick={handleSave} variant="contained" color="primary" tabIndex={0} autoFocus>
           Save
         </Button>
       </DialogActions>
