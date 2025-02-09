@@ -41,7 +41,7 @@ export default function Home() {
     deleteNote,
   } = useNotes();
 
-  const { theme, isDarkMode, setTheme, setIsDarkMode, themeOptions } =
+  const { theme, isDarkMode, isDarkModeAuto, setTheme, setIsDarkMode, themeOptions, resetTheme } =
     useTheme();
 
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -174,8 +174,10 @@ export default function Home() {
             <ThemeMenu
               currentTheme={theme}
               isDarkMode={isDarkMode}
+              isDarkModeAuto={isDarkModeAuto}
               onThemeChange={setTheme}
               onDarkModeChange={setIsDarkMode}
+              onReset={resetTheme}
               themeOptions={themeOptions}
             />
           </Toolbar>
@@ -200,7 +202,7 @@ export default function Home() {
                       bottom: 8,
                       right: 8,
                       display: 'flex',
-                      gap: 0.5,
+                      gap: 1,
                       zIndex: 1,
                       '& .MuiIconButton-root': {
                         backgroundColor: isDarkMode 
@@ -248,12 +250,12 @@ export default function Home() {
                       className="note-actions"
                       sx={{ 
                         display: 'flex', 
-                        gap: 0.5,
                         '& .MuiIconButton-root': {
                           backgroundColor: isDarkMode 
                             ? alpha(theme.colors.dark.primary, 0.1)
                             : alpha(theme.colors.light.primary, 0.1),
-                          padding: '4px',
+                          minWidth: '32px',
+                          minHeight: '32px',
                           '&:hover': {
                             backgroundColor: isDarkMode 
                               ? alpha(theme.colors.dark.primary, 0.2)
@@ -267,7 +269,7 @@ export default function Home() {
                           size="small"
                           onClick={() => handleEditNote(note)}
                         >
-                          <EditIcon sx={{ fontSize: 16 }} />
+                          <EditIcon sx={{ fontSize: 18 }} />
                         </IconButton>
                       </Tooltip>
                       <Tooltip title="Delete note (D)" arrow placement="top">
@@ -275,7 +277,7 @@ export default function Home() {
                           size="small"
                           onClick={() => deleteNote(note.id)}
                         >
-                          <DeleteIcon sx={{ fontSize: 16 }} />
+                          <DeleteIcon sx={{ fontSize: 18 }} />
                         </IconButton>
                       </Tooltip>
                     </Box>

@@ -105,7 +105,7 @@ export const useTheme = () => {
 
   // Helper to check if it's dark based on sunrise/sunset
   const getSystemDarkMode = () => {
-    if (isDarkMode !== 'auto' || !location) {
+    if (!location) {
       return window.matchMedia('(prefers-color-scheme: dark)').matches;
     }
 
@@ -192,7 +192,7 @@ export const useTheme = () => {
       ...THEMES[currentTheme || 'gold'],
       value: currentTheme || 'gold'
     },
-    isDarkMode: isDarkMode === 'auto' ? getSystemDarkMode() : isDarkMode ?? false,
+    isDarkMode: isDarkMode === 'auto' ? getSystemDarkMode() : isDarkMode === true,
     isDarkModeAuto: isDarkMode === 'auto',
     setTheme: (option: ThemeOption) => setCurrentTheme(option.value as ThemeKey),
     setIsDarkMode: (value: DarkModeSettings) => setIsDarkMode(value),

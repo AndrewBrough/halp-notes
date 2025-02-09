@@ -18,7 +18,7 @@ import type { ThemeOption } from '../hooks/useTheme';
 interface ThemeMenuProps {
   currentTheme?: ThemeOption;
   isDarkMode: boolean;
-  isDarkModeAuto?: boolean;
+  isDarkModeAuto: boolean;
   onThemeChange: (theme: ThemeOption) => void;
   onDarkModeChange: (isDark: boolean | 'auto') => void;
   onReset: () => void;
