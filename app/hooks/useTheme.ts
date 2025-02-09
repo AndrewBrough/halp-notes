@@ -130,7 +130,7 @@ export const useTheme = () => {
       ...THEMES[currentTheme || 'gold'],
       value: currentTheme || 'gold'
     },
-    isDarkMode,
+    isDarkMode: isDarkMode ?? false,
     setTheme: (option: ThemeOption) => setCurrentTheme(option.value as ThemeKey),
     setIsDarkMode,
     themeOptions
