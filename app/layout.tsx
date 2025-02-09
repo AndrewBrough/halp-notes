@@ -1,10 +1,10 @@
 import './globals.css'
-import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import { ClientLayout } from './ClientLayout'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata: Metadata = {
+export const metadata = {
   title: 'Notes App',
   description: 'A simple notes app with tags',
   manifest: '/manifest.json',
@@ -28,7 +28,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <ClientLayout>
+          {children}
+        </ClientLayout>
+      </body>
     </html>
   )
 }

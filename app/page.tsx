@@ -11,8 +11,6 @@ import CardContent from '@mui/material/CardContent';
 import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Grid';
 import Chip from '@mui/material/Chip';
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import ThemeProvider from '@mui/material/styles/ThemeProvider';
 import createTheme from '@mui/material/styles/createTheme';
@@ -23,21 +21,20 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-import { useNotes } from './hooks/useNotes';
+import { useNotes } from './context/NotesContext';
 import { useTheme } from './hooks/useTheme';
 import NoteDialog from './components/NoteDialog';
 import ThemeMenu from './components/ThemeMenu';
 import { Note } from './types';
 import ClientOnly from './components/ClientOnly';
+import { MainMenu } from './components/MainMenu';
+import SearchBar from './components/SearchBar';
+import TagSelector from './components/TagSelector';
 
 export default function Home() {
   const {
     notes,
     tags,
-    selectedTags,
-    searchQuery,
-    setSelectedTags,
-    setSearchQuery,
     addNote,
     updateNote,
     deleteNote,
@@ -48,6 +45,7 @@ export default function Home() {
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingNote, setEditingNote] = useState<Note | undefined>();
+  const [expandedNotes, setExpandedNotes] = useState<Set<string>>(new Set());
 
   const handleAddNote = () => {
     setEditingNote(undefined);
@@ -65,6 +63,18 @@ export default function Home() {
     } else {
       addNote(title, content, tags);
     }
+  };
+
+  const toggleNoteExpansion = (noteId: string) => {
+    setExpandedNotes(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(noteId)) {
+        newSet.delete(noteId);
+      } else {
+        newSet.add(noteId);
+      }
+      return newSet;
+    });
   };
 
   const muiTheme = useMemo(() => createTheme({
@@ -131,8 +141,9 @@ export default function Home() {
     <ClientOnly>
       <ThemeProvider theme={muiTheme}>
         <CssBaseline />
-        <AppBar position="fixed">
+        <AppBar position="static" className="mb-4">
           <Toolbar>
+            <MainMenu />
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               Halp Notes
             </Typography>
@@ -145,43 +156,11 @@ export default function Home() {
             />
           </Toolbar>
         </AppBar>
-        <Container maxWidth="md" sx={{ mt: 10, mb: 4 }}>
+        <Container maxWidth="md" sx={{ mb: 4 }}>
           <Box sx={{ mb: 3 }}>
-            <TextField
-              fullWidth
-              label="Search notes"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              sx={{ mb: 2 }}
-            />
-            <Autocomplete
-              multiple
-              autoHighlight
-              autoSelect
-              selectOnFocus
-              options={tags}
-              value={selectedTags}
-              onChange={(_, newValue) => setSelectedTags(newValue)}
-              renderInput={(params) => (
-                <TextField {...params} label="Filter by tags" />
-              )}
-              renderTags={(value) =>
-                value.map((option) => (
-                  <Chip
-                    label={option}
-                    onDelete={() => {
-                      const newTags = selectedTags.filter(
-                        (tag) => tag !== option
-                      );
-                      setSelectedTags(newTags);
-                    }}
-                    key={option}
-                  />
-                ))
-              }
-            />
+            <SearchBar />
+            <TagSelector key={tags.join(',')} />
           </Box>
-
           <Grid container spacing={2}>
             {notes.map((note) => (
               <Grid item xs={12} sm={6} md={4} key={note.id}>
@@ -196,10 +175,12 @@ export default function Home() {
                       sx={{
                         mb: 2,
                         display: '-webkit-box',
-                        WebkitLineClamp: 3,
+                        WebkitLineClamp: expandedNotes.has(note.id) ? undefined : 3,
                         WebkitBoxOrient: 'vertical',
-                        overflow: 'hidden',
+                        overflow: expandedNotes.has(note.id) ? 'visible' : 'hidden',
+                        cursor: 'pointer',
                       }}
+                      onClick={() => toggleNoteExpansion(note.id)}
                     >
                       {note.content}
                     </Typography>
@@ -245,7 +226,6 @@ export default function Home() {
             onClose={() => setDialogOpen(false)}
             onSave={handleSaveNote}
             existingNote={editingNote}
-            availableTags={tags}
           />
         </Container>
       </ThemeProvider>

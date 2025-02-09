@@ -13,13 +13,13 @@ import { Note } from '../types';
 import { Box, Typography, IconButton } from '@mui/material';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import { useNotes } from '../context/NotesContext';
 
 interface NoteDialogProps {
   open: boolean;
   onClose: () => void;
   onSave: (title: string, content: string, tags: string[]) => void;
   existingNote?: Note;
-  availableTags: string[];
 }
 
 export default function NoteDialog({
@@ -27,8 +27,8 @@ export default function NoteDialog({
   onClose,
   onSave,
   existingNote,
-  availableTags,
 }: NoteDialogProps) {
+  const { tags: availableTags } = useNotes();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [tags, setTags] = useState<string[]>([]);
