@@ -10,7 +10,6 @@ export default function TagSelector() {
 
   useEffect(() => {
     const handleNotesUpdate = () => {
-      console.log("forcedUpdate");
       forceUpdate({});
     };
     window.addEventListener('notes-updated', handleNotesUpdate);
@@ -24,8 +23,6 @@ export default function TagSelector() {
   const handleTagDelete = (tagToDelete: string) => {
     setSelectedTags(selectedTags.filter(tag => tag !== tagToDelete));
   };
-
-  console.log("tags", tags);
 
   return (
     <Autocomplete

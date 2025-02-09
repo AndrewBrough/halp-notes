@@ -120,16 +120,25 @@ export function NotesProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  const filteredNotes = state.notes.filter(note => {
-    const matchesTags = selectedTags.length === 0 || 
-      selectedTags.every(tag => note.tags.includes(tag));
-    
-    const matchesSearch = searchQuery === '' ||
-      note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      note.content.toLowerCase().includes(searchQuery.toLowerCase());
+  const filterNotes = (notes: Note[], query: string, selectedTags: string[]) => {
+    return notes.filter((note) => {
+      const matchesSearch = query === '' || 
+        note.title.toLowerCase().includes(query.toLowerCase()) ||
+        note.content.toLowerCase().includes(query.toLowerCase()) ||
+        note.versions.some(version => 
+          version.title.toLowerCase().includes(query.toLowerCase()) ||
+          version.content.toLowerCase().includes(query.toLowerCase())
+        );
 
-    return matchesTags && matchesSearch;
-  });
+      const matchesTags =
+        selectedTags.length === 0 ||
+        selectedTags.every((tag) => note.tags.includes(tag));
+
+      return matchesSearch && matchesTags;
+    });
+  };
+
+  const filteredNotes = filterNotes(state.notes, searchQuery, selectedTags);
 
   return (
     <NotesContext.Provider value={{

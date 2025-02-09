@@ -2,6 +2,16 @@ import { Note } from '../types';
 
 const now = Date.now();
 
+// Helper function to create version history
+const createVersionHistory = (baseTitle: string, baseContent: string, count: number) => {
+  return Array.from({ length: count }, (_, i) => ({
+    title: `${baseTitle} (Version ${count - i})`,
+    content: `${baseContent} - Revision ${count - i}`,
+    tags: ['tutorial'],
+    updatedAt: now - ((i + 1) * 86400000) // Each version 1 day apart
+  }));
+};
+
 export const tutorialNotes: Note[] = [
   {
     id: 'tutorial-1',
@@ -10,7 +20,11 @@ export const tutorialNotes: Note[] = [
     tags: ['tutorial'],
     createdAt: now,
     updatedAt: now,
-    versions: []
+    versions: createVersionHistory(
+      '👋 Welcome to Notes',
+      'Welcome to our note-taking app! This simple tool will help you organize your thoughts.',
+      10
+    )
   },
   {
     id: 'tutorial-2',
@@ -19,7 +33,11 @@ export const tutorialNotes: Note[] = [
     tags: ['tutorial'],
     createdAt: now - 1000,
     updatedAt: now - 1000,
-    versions: []
+    versions: createVersionHistory(
+      '✍️ Creating Notes',
+      'Learn how to create and organize your notes effectively with our simple tools.',
+      10
+    )
   },
   {
     id: 'tutorial-3',
@@ -28,6 +46,10 @@ export const tutorialNotes: Note[] = [
     tags: ['tutorial'],
     createdAt: now - 2000,
     updatedAt: now - 2000,
-    versions: []
+    versions: createVersionHistory(
+      '🎨 Customization Guide',
+      'Discover how to personalize your note-taking experience with themes and search features.',
+      10
+    )
   }
 ]; 
