@@ -146,8 +146,14 @@ export default function NoteDialog({
         {existingNote && (
           <Typography variant="caption" color="text.secondary">
             Created {new Date(existingNote.createdAt).toLocaleString()}
-            {currentVersionIndex === -1 && existingNote.updatedAt !== existingNote.createdAt && (
-              <> • Last edited {new Date(existingNote.updatedAt).toLocaleString()}</>
+            {currentVersionIndex === -1 ? (
+              // Show current version's update date
+              existingNote.updatedAt !== existingNote.createdAt && (
+                <> [updated {new Date(existingNote.updatedAt).toLocaleString()}]</>
+              )
+            ) : (
+              // Show historical version's update date
+              <> [updated {new Date(existingNote.versions[currentVersionIndex].updatedAt).toLocaleString()}]</>
             )}
           </Typography>
         )}
