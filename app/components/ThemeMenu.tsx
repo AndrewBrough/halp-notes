@@ -12,6 +12,7 @@ import PaletteIcon from '@mui/icons-material/Palette';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import RestoreIcon from '@mui/icons-material/Restore';
 import SettingsBrightnessIcon from '@mui/icons-material/SettingsBrightness';
+import Tooltip from '@mui/material/Tooltip';
 import type { ThemeOption } from '../hooks/useTheme';
 
 interface ThemeMenuProps {
@@ -101,10 +102,17 @@ export default function ThemeMenu({
           />
         </MenuItem>
         <MenuItem onClick={() => onDarkModeChange('auto')}>
-          <ListItemIcon>
-            <SettingsBrightnessIcon />
-          </ListItemIcon>
-          <ListItemText>Auto Dark Mode</ListItemText>
+          <Tooltip 
+            title="Will automatically change to dark mode after sunset and before sunrise"
+            placement="bottom"
+          >
+            <div style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
+              <ListItemIcon>
+                <SettingsBrightnessIcon />
+              </ListItemIcon>
+              <ListItemText>Auto Dark Mode</ListItemText>
+            </div>
+          </Tooltip>
           <Switch
             edge="end"
             checked={isDarkModeAuto}
