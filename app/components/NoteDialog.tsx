@@ -15,6 +15,7 @@ import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { useNotes } from '../context/NotesContext';
 import { styled } from '@mui/material/styles';
+import RestoreIcon from '@mui/icons-material/Restore';
 
 interface NoteDialogProps {
   open: boolean;
@@ -121,6 +122,20 @@ export default function NoteDialog({
           </Typography>
           {existingNote && Array.isArray(existingNote.versions) && existingNote.versions.length > 0 && (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              {currentVersionIndex !== -1 && (
+                <IconButton
+                  size="small"
+                  onClick={() => {
+                    setTitle(existingNote.title);
+                    setContent(existingNote.content);
+                    setTags(existingNote.tags);
+                    setCurrentVersionIndex(-1);
+                  }}
+                  title="Reset to current version"
+                >
+                  <RestoreIcon />
+                </IconButton>
+              )}
               <IconButton
                 size="small"
                 onClick={() => handleVersionChange('prev')}
@@ -130,8 +145,8 @@ export default function NoteDialog({
               </IconButton>
               <Typography variant="body2" color="text.secondary">
                 {currentVersionIndex === -1 
-                  ? 'Current Version'
-                  : `Version ${currentVersionIndex + 1}/${existingNote.versions.length}`}
+                  ? `Version ${existingNote.versions.length + 1}/${existingNote.versions.length + 1}`
+                  : `Version ${currentVersionIndex + 1}/${existingNote.versions.length + 1}`}
               </Typography>
               <IconButton
                 size="small"

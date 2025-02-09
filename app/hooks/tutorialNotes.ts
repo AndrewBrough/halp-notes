@@ -5,10 +5,10 @@ const now = Date.now();
 // Helper function to create version history
 const createVersionHistory = (baseTitle: string, baseContent: string, count: number) => {
   return Array.from({ length: count }, (_, i) => ({
-    title: `${baseTitle} (Version ${count - i})`,
-    content: `${baseContent} - Revision ${count - i}`,
+    title: baseTitle,
+    content: `${baseContent} - Revision ${i + 1}`,
     tags: ['tutorial'],
-    updatedAt: now - ((i + 1) * 86400000) // Each version is one day older than the previous
+    updatedAt: now - (((count - 1) - i) * 86400000) // Reversed: oldest version has oldest date
   }));
 };
 
