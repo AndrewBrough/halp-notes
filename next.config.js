@@ -1,13 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone',
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  images: { unoptimized: true },
+  reactStrictMode: true,
+  // This ensures better client-side performance
+  swcMinify: true,
   experimental: {
-    optimizePackageImports: []
+    // This will make all pages client-side rendered by default
+    appDir: true,
   }
-};
+}
 
-module.exports = nextConfig;
+module.exports = nextConfig

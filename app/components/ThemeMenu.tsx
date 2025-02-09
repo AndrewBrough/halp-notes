@@ -10,7 +10,7 @@ import Switch from '@mui/material/Switch';
 import Divider from '@mui/material/Divider';
 import PaletteIcon from '@mui/icons-material/Palette';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
-import { ThemeOption } from '../types';
+import type { ThemeOption } from '../hooks/useTheme';
 
 interface ThemeMenuProps {
   currentTheme: ThemeOption;

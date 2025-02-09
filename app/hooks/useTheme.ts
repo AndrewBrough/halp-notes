@@ -1,29 +1,28 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Theme as MuiTheme } from '@mui/material';
 
-interface ThemeOption {
-  name: string;
-  value: string;
-  colors: {
-    light: {
-      primary: string;
-      secondary: string;
-      background: string;
-    };
-    dark: {
-      primary: string;
-      secondary: string;
-      background: string;
-    };
+interface ThemeColors {
+  light: {
+    primary: string;
+    secondary: string;
+    background: string;
+  };
+  dark: {
+    primary: string;
+    secondary: string;
+    background: string;
   };
 }
 
-const defaultThemes: ThemeOption[] = [
-  {
+interface Theme {
+  name: string;
+  colors: ThemeColors;
+}
+
+const THEMES: Record<string, Theme> = {
+  gold: {
     name: 'Sunset Gold',
-    value: 'gold',
     colors: {
       light: {
         primary: '#ffc107',
@@ -37,9 +36,8 @@ const defaultThemes: ThemeOption[] = [
       }
     }
   },
-  {
+  purple: {
     name: 'Royal Purple',
-    value: 'purple',
     colors: {
       light: {
         primary: '#9c27b0',
@@ -53,9 +51,8 @@ const defaultThemes: ThemeOption[] = [
       }
     }
   },
-  {
+  ocean: {
     name: 'Ocean',
-    value: 'ocean',
     colors: {
       light: {
         primary: '#1976d2',
@@ -69,9 +66,8 @@ const defaultThemes: ThemeOption[] = [
       }
     }
   },
-  {
+  forest: {
     name: 'Forest',
-    value: 'forest',
     colors: {
       light: {
         primary: '#2e7d32',
@@ -85,42 +81,54 @@ const defaultThemes: ThemeOption[] = [
       }
     }
   }
-];
+} as const;
+
+type ThemeKey = keyof typeof THEMES;
+
+export interface ThemeOption {
+  value: string;
+  name: string;
+  colors: ThemeColors;
+}
+
+const isValidThemeKey = (key: string | null): key is ThemeKey => {
+  return key !== null && Object.keys(THEMES).includes(key);
+};
 
 export const useTheme = () => {
-  const [theme, setTheme] = useState<ThemeOption>(() => {
-    if (typeof window !== 'undefined') {
-      const savedTheme = localStorage.getItem('theme');
-      return savedTheme ? JSON.parse(savedTheme) : defaultThemes[0];
-    }
-    return defaultThemes[0];
+  const [currentTheme, setCurrentTheme] = useState<ThemeKey>(() => {
+    const savedTheme = localStorage.getItem('themeKey');
+    return isValidThemeKey(savedTheme) ? savedTheme : 'gold';
   });
 
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      const savedMode = localStorage.getItem('isDarkMode');
-      return savedMode ? JSON.parse(savedMode) : false;
-    }
-    return false;
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    return localStorage.getItem('isDarkMode') === 'true';
   });
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('theme', JSON.stringify(theme));
-    }
-  }, [theme]);
+      localStorage.setItem('themeKey', currentTheme);
+  }, [currentTheme]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      localStorage.setItem('isDarkMode', JSON.stringify(isDarkMode));
+      localStorage.setItem('isDarkMode', String(isDarkMode));
     }
   }, [isDarkMode]);
 
+  const themeOptions = Object.entries(THEMES).map(([key, theme]) => ({
+    value: key,
+    name: theme.name,
+    colors: theme.colors
+  }));
+
   return {
-    theme,
+    theme: {
+      ...THEMES[currentTheme],
+      value: currentTheme
+    },
     isDarkMode,
-    setTheme,
+    setTheme: (option: ThemeOption) => setCurrentTheme(option.value as ThemeKey),
     setIsDarkMode,
-    themeOptions: defaultThemes,
+    themeOptions
   };
 };

@@ -28,6 +28,7 @@ import { useTheme } from './hooks/useTheme';
 import NoteDialog from './components/NoteDialog';
 import ThemeMenu from './components/ThemeMenu';
 import { Note } from './types';
+import ClientOnly from './components/ClientOnly';
 
 export default function Home() {
   const {
@@ -127,122 +128,124 @@ export default function Home() {
   }), [isDarkMode, theme]);
 
   return (
-    <ThemeProvider theme={muiTheme}>
-      <CssBaseline />
-      <AppBar position="fixed">
-        <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Halp Notes
-          </Typography>
-          <ThemeMenu
-            currentTheme={theme}
-            isDarkMode={isDarkMode}
-            onThemeChange={setTheme}
-            onDarkModeChange={setIsDarkMode}
-            themeOptions={themeOptions}
-          />
-        </Toolbar>
-      </AppBar>
-      <Container maxWidth="md" sx={{ mt: 10, mb: 4 }}>
-        <Box sx={{ mb: 3 }}>
-          <TextField
-            fullWidth
-            label="Search notes"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            sx={{ mb: 2 }}
-          />
-          <Autocomplete
-            multiple
-            options={tags}
-            value={selectedTags}
-            onChange={(_, newValue) => setSelectedTags(newValue)}
-            renderInput={(params) => (
-              <TextField {...params} label="Filter by tags" />
-            )}
-            renderTags={(value, getTagProps) =>
-              value.map((option, index) => (
-                <Chip
-                  label={option}
-                  onDelete={() => {
-                    const newTags = selectedTags.filter(
-                      (tag) => tag !== option
-                    );
-                    setSelectedTags(newTags);
-                  }}
-                  key={option}
-                />
-              ))
-            }
-          />
-        </Box>
-
-        <Grid container spacing={2}>
-          {notes.map((note) => (
-            <Grid item xs={12} sm={6} md={4} key={note.id}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h6" gutterBottom>
-                    {note.title}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{
-                      mb: 2,
-                      display: '-webkit-box',
-                      WebkitLineClamp: 3,
-                      WebkitBoxOrient: 'vertical',
-                      overflow: 'hidden',
+    <ClientOnly>
+      <ThemeProvider theme={muiTheme}>
+        <CssBaseline />
+        <AppBar position="fixed">
+          <Toolbar>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              Halp Notes
+            </Typography>
+            <ThemeMenu
+              currentTheme={theme}
+              isDarkMode={isDarkMode}
+              onThemeChange={setTheme}
+              onDarkModeChange={setIsDarkMode}
+              themeOptions={themeOptions}
+            />
+          </Toolbar>
+        </AppBar>
+        <Container maxWidth="md" sx={{ mt: 10, mb: 4 }}>
+          <Box sx={{ mb: 3 }}>
+            <TextField
+              fullWidth
+              label="Search notes"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              sx={{ mb: 2 }}
+            />
+            <Autocomplete
+              multiple
+              options={tags}
+              value={selectedTags}
+              onChange={(_, newValue) => setSelectedTags(newValue)}
+              renderInput={(params) => (
+                <TextField {...params} label="Filter by tags" />
+              )}
+              renderTags={(value) =>
+                value.map((option) => (
+                  <Chip
+                    label={option}
+                    onDelete={() => {
+                      const newTags = selectedTags.filter(
+                        (tag) => tag !== option
+                      );
+                      setSelectedTags(newTags);
                     }}
-                  >
-                    {note.content}
-                  </Typography>
-                  <Box
-                    sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mb: 2 }}
-                  >
-                    {note.tags.map((tag) => (
-                      <Chip key={tag} label={tag} size="small" />
-                    ))}
-                  </Box>
-                  <Box
-                    sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}
-                  >
-                    <IconButton
-                      size="small"
-                      onClick={() => handleEditNote(note)}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton
-                      size="small"
-                      onClick={() => deleteNote(note.id)}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
+                    key={option}
+                  />
+                ))
+              }
+            />
+          </Box>
 
-        <Fab
-          color="primary"
-          sx={{ position: 'fixed', bottom: 16, right: 16 }}
-          onClick={handleAddNote}
-        >
-          <AddIcon />
-        </Fab>
+          <Grid container spacing={2}>
+            {notes.map((note) => (
+              <Grid item xs={12} sm={6} md={4} key={note.id}>
+                <Card>
+                  <CardContent>
+                    <Typography variant="h6" gutterBottom>
+                      {note.title}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      sx={{
+                        mb: 2,
+                        display: '-webkit-box',
+                        WebkitLineClamp: 3,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
+                      }}
+                    >
+                      {note.content}
+                    </Typography>
+                    <Box
+                      sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mb: 2 }}
+                    >
+                      {note.tags.map((tag) => (
+                        <Chip key={tag} label={tag} size="small" />
+                      ))}
+                    </Box>
+                    <Box
+                      sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}
+                    >
+                      <IconButton
+                        size="small"
+                        onClick={() => handleEditNote(note)}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton
+                        size="small"
+                        onClick={() => deleteNote(note.id)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
 
-        <NoteDialog
-          open={dialogOpen}
-          onClose={() => setDialogOpen(false)}
-          onSave={handleSaveNote}
-          existingNote={editingNote}
-          availableTags={tags}
-        />
-      </Container>
-    </ThemeProvider>
+          <Fab
+            color="primary"
+            sx={{ position: 'fixed', bottom: 16, right: 16 }}
+            onClick={handleAddNote}
+          >
+            <AddIcon />
+          </Fab>
+
+          <NoteDialog
+            open={dialogOpen}
+            onClose={() => setDialogOpen(false)}
+            onSave={handleSaveNote}
+            existingNote={editingNote}
+            availableTags={tags}
+          />
+        </Container>
+      </ThemeProvider>
+    </ClientOnly>
   );
 }
