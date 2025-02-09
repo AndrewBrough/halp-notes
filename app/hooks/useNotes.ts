@@ -10,7 +10,7 @@ const tutorialNotes: Note[] = [
     id: 'tutorial-1',
     title: '👋 Welcome to Halp Notes!',
     content: 'Welcome to Halp Notes! This note and the following ones are tagged with "tutorial" to help you get started. You can filter them using the tags selector above. To remove these tutorial notes, simply delete them using the trash icon.',
-    tags: ['tutorial', 'welcome'],
+    tags: ['tutorial'],
     createdAt: Date.now(),
     updatedAt: Date.now()
   },
@@ -18,7 +18,7 @@ const tutorialNotes: Note[] = [
     id: 'tutorial-2',
     title: '✍️ Creating and Editing Notes',
     content: 'To create a new note, click the + button in the bottom right corner. To edit an existing note, click the pencil icon on any note card. You can edit the title, content, and tags of your notes at any time.',
-    tags: ['tutorial', 'basics'],
+    tags: ['tutorial'],
     createdAt: Date.now() - 1000,
     updatedAt: Date.now() - 1000
   },
@@ -26,7 +26,7 @@ const tutorialNotes: Note[] = [
     id: 'tutorial-3',
     title: '🏷️ Using Tags',
     content: 'Tags help you organize your notes. Add multiple tags to each note and use the tag filter above to find related notes quickly. Type new tags or select from existing ones when editing a note. Try creating a note with your own tags!',
-    tags: ['tutorial', 'tags'],
+    tags: ['tutorial'],
     createdAt: Date.now() - 2000,
     updatedAt: Date.now() - 2000
   },
@@ -34,7 +34,7 @@ const tutorialNotes: Note[] = [
     id: 'tutorial-4',
     title: '🎨 Customizing Your Theme',
     content: 'Click the palette icon in the top right to change the app\'s appearance. Choose from five beautiful themes and toggle dark mode for comfortable viewing in any lighting condition.',
-    tags: ['tutorial', 'customization'],
+    tags: ['tutorial'],
     createdAt: Date.now() - 3000,
     updatedAt: Date.now() - 3000
   },
@@ -42,7 +42,7 @@ const tutorialNotes: Note[] = [
     id: 'tutorial-5',
     title: '🔍 Searching Notes',
     content: 'Use the search bar at the top to find notes by title or content. Combine search with tag filtering to quickly find exactly what you\'re looking for. Try searching for "tutorial" to find these help notes again!',
-    tags: ['tutorial', 'search'],
+    tags: ['tutorial'],
     createdAt: Date.now() - 4000,
     updatedAt: Date.now() - 4000
   }
@@ -50,7 +50,7 @@ const tutorialNotes: Note[] = [
 
 const initialState: NotesState = {
   notes: tutorialNotes,
-  tags: [...new Set(tutorialNotes.flatMap(note => note.tags))],
+  tags: Array.from(new Set(tutorialNotes.flatMap(note => note.tags))),
 };
 
 export const useNotes = () => {
@@ -79,7 +79,7 @@ export const useNotes = () => {
       updatedAt: Date.now(),
     };
 
-    const newTags = [...new Set([...state.tags, ...tags])];
+    const newTags = Array.from(new Set([...state.tags, ...tags]));
 
     setState(prev => ({
       notes: [newNote, ...prev.notes],
@@ -88,7 +88,7 @@ export const useNotes = () => {
   };
 
   const updateNote = (id: string, title: string, content: string, tags: string[]) => {
-    const newTags = [...new Set([...state.tags, ...tags])];
+    const newTags = Array.from(new Set([...state.tags, ...tags]));
 
     setState(prev => ({
       notes: prev.notes.map(note =>

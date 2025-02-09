@@ -1,30 +1,28 @@
 'use client';
 
-import React, { useState } from 'react';
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Container,
-  Fab,
-  Card,
-  CardContent,
-  IconButton,
-  Grid,
-  Chip,
-  TextField,
-  Autocomplete,
-  Box,
-  ThemeProvider,
-  createTheme,
-  CssBaseline,
-  alpha,
-} from '@mui/material';
-import {
-  Add as AddIcon,
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-} from '@mui/icons-material';
+import React, { useState, useMemo } from 'react';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import Fab from '@mui/material/Fab';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import IconButton from '@mui/material/IconButton';
+import Grid from '@mui/material/Grid';
+import Chip from '@mui/material/Chip';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+import Box from '@mui/material/Box';
+import ThemeProvider from '@mui/material/styles/ThemeProvider';
+import createTheme from '@mui/material/styles/createTheme';
+import CssBaseline from '@mui/material/CssBaseline';
+import { alpha } from '@mui/material/styles';
+
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+
 import { useNotes } from './hooks/useNotes';
 import { useTheme } from './hooks/useTheme';
 import NoteDialog from './components/NoteDialog';
@@ -68,7 +66,7 @@ export default function Home() {
     }
   };
 
-  const muiTheme = createTheme({
+  const muiTheme = useMemo(() => createTheme({
     palette: {
       mode: isDarkMode ? 'dark' : 'light',
       primary: {
@@ -86,18 +84,27 @@ export default function Home() {
           ? theme.colors.dark.background
           : theme.colors.light.background,
         paper: isDarkMode
-          ? alpha(theme.colors.dark.background, 0.8)
-          : alpha(theme.colors.light.background, 0.8),
+          ? theme.colors.dark.background
+          : theme.colors.light.background,
       },
     },
     components: {
+      MuiCard: {
+        styleOverrides: {
+          root: {
+            backgroundColor: isDarkMode
+              ? alpha(theme.colors.dark.primary, 0.05)
+              : alpha(theme.colors.light.primary, 0.05),
+          },
+        },
+      },
       MuiTextField: {
         styleOverrides: {
           root: {
             '& .MuiInputBase-root': {
               backgroundColor: isDarkMode
-                ? alpha('#fff', 0.05)
-                : alpha('#000', 0.05),
+                ? alpha(theme.colors.dark.primary, 0.05)
+                : alpha(theme.colors.light.primary, 0.05),
             },
           },
         },
@@ -109,10 +116,15 @@ export default function Home() {
               ? theme.colors.dark.background
               : theme.colors.light.background,
           },
+          inputRoot: {
+            backgroundColor: isDarkMode
+              ? alpha(theme.colors.dark.primary, 0.05)
+              : alpha(theme.colors.light.primary, 0.05),
+          },
         },
       },
     },
-  });
+  }), [isDarkMode, theme]);
 
   return (
     <ThemeProvider theme={muiTheme}>
@@ -158,7 +170,6 @@ export default function Home() {
                     );
                     setSelectedTags(newTags);
                   }}
-                  {...getTagProps({ index })}
                   key={option}
                 />
               ))

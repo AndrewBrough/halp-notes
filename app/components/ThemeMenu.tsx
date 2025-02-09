@@ -1,16 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import {
-  IconButton,
-  Menu,
-  MenuItem,
-  ListItemIcon,
-  ListItemText,
-  Switch,
-  Divider,
-} from '@mui/material';
-import { Palette as PaletteIcon, DarkMode as DarkModeIcon } from '@mui/icons-material';
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Switch from '@mui/material/Switch';
+import Divider from '@mui/material/Divider';
+import PaletteIcon from '@mui/icons-material/Palette';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
 import { ThemeOption } from '../types';
 
 interface ThemeMenuProps {

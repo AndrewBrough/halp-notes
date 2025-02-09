@@ -1,10 +1,26 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Theme as MuiTheme } from '@mui/material';
 
-const THEME_STORAGE_KEY = 'notes-app-theme';
+interface ThemeOption {
+  name: string;
+  value: string;
+  colors: {
+    light: {
+      primary: string;
+      secondary: string;
+      background: string;
+    };
+    dark: {
+      primary: string;
+      secondary: string;
+      background: string;
+    };
+  };
+}
 
-export const themeOptions = [
+const defaultThemes: ThemeOption[] = [
   {
     name: 'Sunset Gold',
     value: 'gold',
@@ -68,63 +84,43 @@ export const themeOptions = [
         background: '#071a07'
       }
     }
-  },
-  {
-    name: 'Ruby',
-    value: 'ruby',
-    colors: {
-      light: {
-        primary: '#d32f2f',
-        secondary: '#ef9a9a',
-        background: '#fff5f5'
-      },
-      dark: {
-        primary: '#ef9a9a',
-        secondary: '#d32f2f',
-        background: '#1a0707'
-      }
-    }
   }
 ];
 
 export const useTheme = () => {
-  const [theme, setTheme] = useState(themeOptions[0]); // Sunset Gold is now first
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [theme, setTheme] = useState<ThemeOption>(() => {
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('theme');
+      return savedTheme ? JSON.parse(savedTheme) : defaultThemes[0];
+    }
+    return defaultThemes[0];
+  });
+
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      const savedMode = localStorage.getItem('isDarkMode');
+      return savedMode ? JSON.parse(savedMode) : false;
+    }
+    return false;
+  });
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
-    if (savedTheme) {
-      const parsed = JSON.parse(savedTheme);
-      setTheme(themeOptions.find(t => t.value === parsed.theme) || themeOptions[0]);
-      setIsDarkMode(parsed.isDark);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('theme', JSON.stringify(theme));
     }
-
-    const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    if (!savedTheme) {
-      setIsDarkMode(darkModeMediaQuery.matches);
-    }
-
-    const handleChange = (e: MediaQueryListEvent) => {
-      if (!localStorage.getItem(THEME_STORAGE_KEY)) {
-        setIsDarkMode(e.matches);
-      }
-    };
-    darkModeMediaQuery.addEventListener('change', handleChange);
-    return () => darkModeMediaQuery.removeEventListener('change', handleChange);
-  }, []);
+  }, [theme]);
 
   useEffect(() => {
-    localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify({
-      theme: theme.value,
-      isDark: isDarkMode
-    }));
-  }, [theme, isDarkMode]);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('isDarkMode', JSON.stringify(isDarkMode));
+    }
+  }, [isDarkMode]);
 
   return {
     theme,
     isDarkMode,
     setTheme,
     setIsDarkMode,
-    themeOptions
+    themeOptions: defaultThemes,
   };
 };
