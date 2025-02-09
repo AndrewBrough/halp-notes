@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { getSunrise, getSunset } from 'sunrise-sunset-js';
 
 interface ThemeColors {
   light: {
@@ -95,9 +96,42 @@ const isValidThemeKey = (key: string | null): key is ThemeKey => {
   return key !== null && Object.keys(THEMES).includes(key);
 };
 
+type DarkModeSettings = boolean | 'auto';
+
 export const useTheme = () => {
   const [currentTheme, setCurrentTheme] = useState<ThemeKey>();
-  const [isDarkMode, setIsDarkMode] = useState<boolean | null>(null);
+  const [isDarkMode, setIsDarkMode] = useState<DarkModeSettings | null>(null);
+  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
+
+  // Helper to check if it's dark based on sunrise/sunset
+  const getSystemDarkMode = () => {
+    if (isDarkMode !== 'auto' || !location) {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+
+    const now = new Date();
+    const sunrise = getSunrise(location.lat, location.lng);
+    const sunset = getSunset(location.lat, location.lng);
+
+    return now < sunrise || now > sunset;
+  };
+
+  // Get user's location
+  useEffect(() => {
+    if (isDarkMode === 'auto' && !location) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          });
+        },
+        (error) => {
+          console.warn('Could not get location, falling back to system preference:', error);
+        }
+      );
+    }
+  }, [isDarkMode, location]);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('themeKey') || 'gold';
@@ -107,7 +141,7 @@ export const useTheme = () => {
     
     const savedDarkMode = localStorage.getItem('isDarkMode');
     if (savedDarkMode !== null) {
-      setIsDarkMode(savedDarkMode === 'true');
+      setIsDarkMode(savedDarkMode === 'auto' ? 'auto' : savedDarkMode === 'true');
     }
   }, []);
 
@@ -118,6 +152,34 @@ export const useTheme = () => {
   useEffect(() => {
     isDarkMode !== null && localStorage.setItem('isDarkMode', String(isDarkMode));
   }, [isDarkMode]);
+
+  // Add system dark mode listener and update timer
+  useEffect(() => {
+    if (isDarkMode === 'auto') {
+      // Update dark mode every minute to check sunrise/sunset
+      const interval = setInterval(() => {
+        // Force re-render to update dark mode state
+        setIsDarkMode('auto');
+      }, 60000); // Check every minute
+
+      // Also listen for system preference changes as fallback
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      const handler = () => {
+        setIsDarkMode('auto');
+      };
+      
+      mediaQuery.addEventListener('change', handler);
+      return () => {
+        clearInterval(interval);
+        mediaQuery.removeEventListener('change', handler);
+      };
+    }
+  }, [isDarkMode]);
+
+  const resetTheme = () => {
+    setCurrentTheme('gold');
+    setIsDarkMode(false);
+  };
 
   const themeOptions = Object.entries(THEMES).map(([key, theme]) => ({
     value: key,
@@ -130,9 +192,11 @@ export const useTheme = () => {
       ...THEMES[currentTheme || 'gold'],
       value: currentTheme || 'gold'
     },
-    isDarkMode: isDarkMode ?? false,
+    isDarkMode: isDarkMode === 'auto' ? getSystemDarkMode() : isDarkMode ?? false,
+    isDarkModeAuto: isDarkMode === 'auto',
     setTheme: (option: ThemeOption) => setCurrentTheme(option.value as ThemeKey),
-    setIsDarkMode,
+    setIsDarkMode: (value: DarkModeSettings) => setIsDarkMode(value),
+    resetTheme,
     themeOptions
   };
 };

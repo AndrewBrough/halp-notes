@@ -10,21 +10,27 @@ import Switch from '@mui/material/Switch';
 import Divider from '@mui/material/Divider';
 import PaletteIcon from '@mui/icons-material/Palette';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
+import RestoreIcon from '@mui/icons-material/Restore';
+import SettingsBrightnessIcon from '@mui/icons-material/SettingsBrightness';
 import type { ThemeOption } from '../hooks/useTheme';
 
 interface ThemeMenuProps {
   currentTheme?: ThemeOption;
   isDarkMode: boolean;
+  isDarkModeAuto?: boolean;
   onThemeChange: (theme: ThemeOption) => void;
-  onDarkModeChange: (isDark: boolean) => void;
+  onDarkModeChange: (isDark: boolean | 'auto') => void;
+  onReset: () => void;
   themeOptions: ThemeOption[];
 }
 
 export default function ThemeMenu({
   currentTheme,
   isDarkMode,
+  isDarkModeAuto,
   onThemeChange,
   onDarkModeChange,
+  onReset,
   themeOptions,
 }: ThemeMenuProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -90,8 +96,27 @@ export default function ThemeMenu({
           <Switch
             edge="end"
             checked={isDarkMode}
+            disabled={isDarkModeAuto}
             onChange={(e) => onDarkModeChange(e.target.checked)}
           />
+        </MenuItem>
+        <MenuItem onClick={() => onDarkModeChange('auto')}>
+          <ListItemIcon>
+            <SettingsBrightnessIcon />
+          </ListItemIcon>
+          <ListItemText>Auto Dark Mode</ListItemText>
+          <Switch
+            edge="end"
+            checked={isDarkModeAuto}
+            onChange={(e) => onDarkModeChange(e.target.checked ? 'auto' : false)}
+          />
+        </MenuItem>
+        <Divider />
+        <MenuItem onClick={onReset}>
+          <ListItemIcon>
+            <RestoreIcon />
+          </ListItemIcon>
+          <ListItemText>Reset to Default</ListItemText>
         </MenuItem>
       </Menu>
     </>
