@@ -3,10 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "concurrently --kill-others-on-fail --handle-input \"chokidar 'app/**/*.{js,jsx,ts,tsx}' 'components/**/*.{js,jsx,ts,tsx}' 'pages/**/*.{js,jsx,ts,tsx}' -c 'eslint {path}'\" \"next dev\"",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prepare": "husky install",
+    "build-check": "next build --no-lint"
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
@@ -27,5 +29,17 @@
     "tailwindcss": "3.3.3",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "5.2.2"
+  },
+  "devDependencies": {
+    "chokidar-cli": "^3.0.0",
+    "concurrently": "^8.2.2",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "next build --no-lint"
+    ]
   }
 }
