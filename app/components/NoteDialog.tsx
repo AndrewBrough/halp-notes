@@ -14,6 +14,7 @@ import { Box, Typography, IconButton } from '@mui/material';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { useNotes } from '../context/NotesContext';
+import { styled } from '@mui/material/styles';
 
 interface NoteDialogProps {
   open: boolean;
@@ -21,7 +22,6 @@ interface NoteDialogProps {
   onSave: (title: string, content: string, tags: string[]) => void;
   existingNote?: Note;
 }
-
 export default function NoteDialog({
   open,
   onClose,
@@ -220,13 +220,25 @@ export default function NoteDialog({
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} tabIndex={2}>Cancel</Button>
+        <Button 
+          onClick={onClose} 
+          data-cancel-button
+        >
+          Cancel
+        </Button>
         {!existingNote && (
-          <Button onClick={handleSaveAndNew} color="primary" tabIndex={1}>
+          <Button 
+            onClick={handleSaveAndNew} 
+            color="primary"
+          >
             Save & New
           </Button>
         )}
-        <Button onClick={handleSave} variant="contained" color="primary" tabIndex={0} autoFocus>
+        <Button 
+          onClick={handleSave} 
+          variant="contained" 
+          color="primary"
+        >
           Save
         </Button>
       </DialogActions>
