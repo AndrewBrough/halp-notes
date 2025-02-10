@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Note, NotesState } from '../types';
 import { tutorialNotes } from '../defaultNotes/tutorialNotes';
+import { foodNotes } from '../defaultNotes/foodNotes';
 
 interface NotesContextType {
   notes: Note[];
@@ -37,9 +38,11 @@ export function NotesProvider({ children }: { children: ReactNode }) {
       };
     }
 
+    // If no saved data exists, load default tutorial and food notes
+    const defaultNotes = [...tutorialNotes, ...foodNotes];
     return {
-      notes: tutorialNotes,
-      tags: computeInitialTags(tutorialNotes),
+      notes: defaultNotes,
+      tags: computeInitialTags(defaultNotes),
     };
   });
 
