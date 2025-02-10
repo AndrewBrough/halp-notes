@@ -1,11 +1,9 @@
 export const SHORTCUT_CATEGORIES = {
-  '': {
+  'Site Navigation': {
     RANDOM_NOTES: {
       keys: ['H'],
       description: 'Get halp'
-    }
-  },
-  'Site Navigation': {
+    },
     SEARCH: {
       keys: ['S'],
       description: 'Focus search box'
