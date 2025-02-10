@@ -21,7 +21,6 @@ import { useState } from 'react';
 import { useNotes } from '../context/NotesContext';
 import { SHORTCUTS, formatShortcut } from '../constants/shortcuts';
 import { useTheme } from '../context/ThemeContext';
-import Tooltip from '@mui/material/Tooltip';
 import PaletteIcon from '@mui/icons-material/Palette';
 
 export const MainMenu = () => {
@@ -51,14 +50,14 @@ export const MainMenu = () => {
       <IconButton
         onClick={() => setIsOpen(true)}
         size="large"
-        edge="start"
+        edge="end"
         color="inherit"
         aria-label="menu"
       >
         <MenuIcon />
       </IconButton>
       <Drawer
-        anchor="left"
+        anchor="right"
         open={isOpen}
         onClose={handleClose}
       >
@@ -119,7 +118,6 @@ export const MainMenu = () => {
             </Box>
           </Collapse>
 
-          <Divider sx={{ my: 2 }} />
           <Button
             onClick={handleRestoreTutorials}
             startIcon={<HelpOutlineIcon />}

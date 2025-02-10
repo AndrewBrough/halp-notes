@@ -15,6 +15,7 @@ import ThemeProvider from '@mui/material/styles/ThemeProvider';
 import CssBaseline from '@mui/material/CssBaseline';
 import Tooltip from '@mui/material/Tooltip';
 import { alpha } from '@mui/material/styles';
+import { Cedarville_Cursive } from 'next/font/google'
 
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -29,6 +30,11 @@ import NewNoteButton from './components/NewNoteButton';
 import { SHORTCUTS } from './constants/shortcuts';
 import ClientOnly from './components/ClientOnly';
 import { Note } from './types';
+
+const cedarville = Cedarville_Cursive({ 
+  weight: '400',
+  subsets: ['latin'] 
+})
 
 export default function Home() {
   const {
@@ -106,12 +112,31 @@ export default function Home() {
     <ClientOnly>
       <ThemeProvider theme={muiTheme}>
         <CssBaseline />
-        <AppBar position="static" className="mb-4">
+        <AppBar 
+          position="static" 
+          elevation={0}
+          sx={{ 
+            backgroundColor: 'transparent',
+            mb: 4 
+          }}
+        >
           <Toolbar>
-            <MainMenu />
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Halp Notes
+            <Typography 
+              variant="h4" 
+              component="div" 
+              sx={{ 
+                flexGrow: 1,
+                fontSize: '2.5rem',
+                display: 'flex',
+                alignItems: 'baseline'
+              }}
+            >
+              <span className={cedarville.className}>Halp</span>
+              <span style={{ fontSize: '1.25rem', marginLeft: '0.5rem' }}>
+                notes
+              </span>
             </Typography>
+            <MainMenu />
           </Toolbar>
         </AppBar>
         <Container maxWidth="md" sx={{ mb: 4 }}>

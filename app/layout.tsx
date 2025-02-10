@@ -1,8 +1,12 @@
 import './globals.css'
-import { Inter } from 'next/font/google'
+import { Inter, Cedarville_Cursive } from 'next/font/google'
 import { ClientLayout } from './ClientLayout'
 
 const inter = Inter({ subsets: ['latin'] })
+const cedarville = Cedarville_Cursive({ 
+  weight: '400',
+  subsets: ['latin'] 
+})
 
 export const metadata = {
   title: 'Notes App',
