@@ -19,6 +19,7 @@ import { Cedarville_Cursive } from 'next/font/google'
 import Stack from '@mui/material/Stack';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import Button from '@mui/material/Button';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -292,12 +293,20 @@ export default function Home() {
                         });
                       }}
                     >
+                      <CalendarTodayIcon sx={{ mr: 1 }} color="primary" />
                       <Typography 
                         variant="h6" 
                         component="h2" 
                         className="text-lg font-normal mt-8 text-gray-700 dark:text-gray-300"
                       >
                         {format(new Date(date), 'EEEE, MMMM d, yyyy')}
+                      </Typography>
+                      <Typography 
+                        variant="body2" 
+                        color="text.secondary" 
+                        sx={{ ml: 2 }}
+                      >
+                        {notes.length} note{notes.length !== 1 ? 's' : ''}
                       </Typography>
                       <Box sx={{ ml: 'auto' }}>
                         {collapsedDates.has(date) ? <ExpandMoreIcon /> : <ExpandLessIcon />}
