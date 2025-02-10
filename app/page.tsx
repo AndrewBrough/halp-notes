@@ -188,33 +188,35 @@ export default function Home() {
             mb: 4 
           }}
         >
-          <Toolbar>
-            <Typography 
-              variant="h4" 
-              component="div" 
-              sx={{ 
-                flexGrow: 1,
-                fontSize: '2.5rem',
-                display: 'flex',
-                alignItems: 'baseline',
-                color: isDarkMode 
-                  ? theme.colors.dark.primary 
-                  : theme.colors.light.primary
-              }}
-            >
-              <span className={cedarville.className}>Halp</span>
-              <span style={{ fontSize: '1.25rem', marginLeft: '0.5rem' }}>
-                notes
-              </span>
-            </Typography>
-            <MainMenu 
-              sx={{ 
-                color: isDarkMode 
-                  ? theme.colors.dark.primary 
-                  : theme.colors.light.primary
-              }} 
-            />
-          </Toolbar>
+          <Container maxWidth="md" sx={{ px: { xs: 2, sm: 3 } }}>
+            <Toolbar disableGutters>
+              <Typography 
+                variant="h4" 
+                component="div" 
+                sx={{ 
+                  flexGrow: 1,
+                  fontSize: '2.5rem',
+                  display: 'flex',
+                  alignItems: 'baseline',
+                  color: isDarkMode 
+                    ? theme.colors.dark.primary 
+                    : theme.colors.light.primary
+                }}
+              >
+                <span className={cedarville.className}>Halp</span>
+                <span style={{ fontSize: '1.25rem', marginLeft: '0.5rem' }}>
+                  notes
+                </span>
+              </Typography>
+              <MainMenu 
+                sx={{ 
+                  color: isDarkMode 
+                    ? theme.colors.dark.primary 
+                    : theme.colors.light.primary
+                }} 
+              />
+            </Toolbar>
+          </Container>
         </AppBar>
         <Container maxWidth="md" sx={{ mb: 4 }}>
           <Box sx={{ mb: 3 }}>
