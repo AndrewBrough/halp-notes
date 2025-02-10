@@ -2,5 +2,5 @@ export const isInputFocused = () => {
   const activeElement = document.activeElement;
   return activeElement instanceof HTMLInputElement || 
          activeElement instanceof HTMLTextAreaElement ||
-         activeElement?.isContentEditable;
+         (activeElement as HTMLElement)?.isContentEditable;
 }; 
