@@ -18,6 +18,7 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import KeyboardIcon from '@mui/icons-material/Keyboard';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import RestoreIcon from '@mui/icons-material/Restore';
+import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import { useState, useEffect } from 'react';
 import { useNotes } from '../context/NotesContext';
 import { SHORTCUTS, SHORTCUT_CATEGORIES, formatShortcut } from '../constants/shortcuts';
@@ -63,6 +64,13 @@ export const MainMenu = ({ sx }: MainMenuProps) => {
   const handleRestoreTutorials = () => {
     restoreTutorialNotes();
     handleClose();
+  };
+
+  const handleClearData = () => {
+    if (window.confirm('Are you sure you want to clear all data? This action cannot be undone.')) {
+      localStorage.clear();
+      window.location.reload();
+    }
   };
 
   return (
@@ -149,9 +157,19 @@ export const MainMenu = ({ sx }: MainMenuProps) => {
             startIcon={<HelpOutlineIcon />}
             variant="outlined"
             fullWidth
-            sx={{ justifyContent: 'flex-start', textAlign: 'left' }}
+            sx={{ justifyContent: 'flex-start', textAlign: 'left', mb: 2 }}
           >
             Restore Tutorial Notes
+          </Button>
+          <Button
+            onClick={handleClearData}
+            startIcon={<DeleteSweepIcon />}
+            variant="outlined"
+            color="error"
+            fullWidth
+            sx={{ justifyContent: 'flex-start', textAlign: 'left' }}
+          >
+            Clear All Data
           </Button>
           <Divider sx={{ my: 2 }} />
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
