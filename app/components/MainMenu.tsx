@@ -16,12 +16,11 @@ import MenuIcon from '@mui/icons-material/Menu';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import KeyboardIcon from '@mui/icons-material/Keyboard';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
-import SettingsBrightnessIcon from '@mui/icons-material/SettingsBrightness';
 import RestoreIcon from '@mui/icons-material/Restore';
 import { useState } from 'react';
 import { useNotes } from '../context/NotesContext';
 import { SHORTCUTS, formatShortcut } from '../constants/shortcuts';
-import { useTheme } from '../hooks/useTheme';
+import { useTheme } from '../context/ThemeContext';
 import Tooltip from '@mui/material/Tooltip';
 import PaletteIcon from '@mui/icons-material/Palette';
 
@@ -32,7 +31,6 @@ export const MainMenu = () => {
   const { 
     theme: currentTheme, 
     isDarkMode, 
-    isDarkModeAuto, 
     setTheme, 
     setIsDarkMode, 
     resetTheme,
@@ -109,26 +107,7 @@ export const MainMenu = () => {
                 <Switch
                   edge="end"
                   checked={isDarkMode}
-                  disabled={isDarkModeAuto}
                   onChange={(e) => setIsDarkMode(e.target.checked)}
-                />
-              </MenuItem>
-              <MenuItem sx={{ width: '100%', textAlign: 'left' }}>
-                <Tooltip 
-                  title="Will automatically change to dark mode after sunset and before sunrise"
-                  placement="right"
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
-                    <ListItemIcon>
-                      <SettingsBrightnessIcon />
-                    </ListItemIcon>
-                    <ListItemText sx={{ textAlign: 'left' }}>Auto Dark Mode</ListItemText>
-                  </div>
-                </Tooltip>
-                <Switch
-                  edge="end"
-                  checked={isDarkModeAuto}
-                  onChange={(e) => setIsDarkMode(e.target.checked ? 'auto' : false)}
                 />
               </MenuItem>
               <MenuItem onClick={resetTheme} sx={{ width: '100%', textAlign: 'left' }}>

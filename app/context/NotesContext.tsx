@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Note, NotesState } from '../types';
-import { tutorialNotes } from '../hooks/tutorialNotes';
+import { tutorialNotes } from '../defaultNotes/tutorialNotes';
 
 interface NotesContextType {
   notes: Note[];

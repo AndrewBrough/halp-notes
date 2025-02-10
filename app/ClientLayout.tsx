@@ -1,6 +1,7 @@
 'use client';
 
 import { NotesProvider } from './context/NotesContext'
+import { ThemeProvider } from './context/ThemeContext'
 
 export function ClientLayout({
   children,
@@ -8,8 +9,10 @@ export function ClientLayout({
   children: React.ReactNode
 }) {
   return (
-    <NotesProvider>
-      {children}
-    </NotesProvider>
+    <ThemeProvider>
+      <NotesProvider>
+        {children}
+      </NotesProvider>
+    </ThemeProvider>
   )
 } 

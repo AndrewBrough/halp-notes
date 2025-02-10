@@ -12,16 +12,15 @@ import Grid from '@mui/material/Grid';
 import Chip from '@mui/material/Chip';
 import Box from '@mui/material/Box';
 import ThemeProvider from '@mui/material/styles/ThemeProvider';
-import createTheme from '@mui/material/styles/createTheme';
 import CssBaseline from '@mui/material/CssBaseline';
+import Tooltip from '@mui/material/Tooltip';
 import { alpha } from '@mui/material/styles';
-import { Tooltip } from '@mui/material';
 
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import { useNotes } from './context/NotesContext';
-import { useTheme } from './hooks/useTheme';
+import { useTheme } from './context/ThemeContext';
 import NoteDialog from './components/NoteDialog';
 import { MainMenu } from './components/MainMenu';
 import SearchBar from './components/SearchBar';
@@ -40,8 +39,11 @@ export default function Home() {
     deleteNote,
   } = useNotes();
 
-  const { theme, isDarkMode, isDarkModeAuto, setTheme, setIsDarkMode, themeOptions, resetTheme } =
-    useTheme();
+  const { 
+    theme, 
+    isDarkMode, 
+    muiTheme 
+  } = useTheme();
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingNote, setEditingNote] = useState<Note | undefined>();
@@ -99,66 +101,6 @@ export default function Home() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [hoveredNoteId, notes, handleEditNote, deleteNote]);
-
-  const muiTheme = useMemo(() => createTheme({
-    palette: {
-      mode: isDarkMode ? 'dark' : 'light',
-      primary: {
-        main: isDarkMode
-          ? theme.colors.dark.primary
-          : theme.colors.light.primary,
-      },
-      secondary: {
-        main: isDarkMode
-          ? theme.colors.dark.secondary
-          : theme.colors.light.secondary,
-      },
-      background: {
-        default: isDarkMode
-          ? theme.colors.dark.background
-          : theme.colors.light.background,
-        paper: isDarkMode
-          ? theme.colors.dark.background
-          : theme.colors.light.background,
-      },
-    },
-    components: {
-      MuiCard: {
-        styleOverrides: {
-          root: {
-            backgroundColor: isDarkMode
-              ? alpha(theme.colors.dark.primary, 0.05)
-              : alpha(theme.colors.light.primary, 0.05),
-          },
-        },
-      },
-      MuiTextField: {
-        styleOverrides: {
-          root: {
-            '& .MuiInputBase-root': {
-              backgroundColor: isDarkMode
-                ? alpha(theme.colors.dark.primary, 0.05)
-                : alpha(theme.colors.light.primary, 0.05),
-            },
-          },
-        },
-      },
-      MuiAutocomplete: {
-        styleOverrides: {
-          paper: {
-            backgroundColor: isDarkMode
-              ? theme.colors.dark.background
-              : theme.colors.light.background,
-          },
-          inputRoot: {
-            backgroundColor: isDarkMode
-              ? alpha(theme.colors.dark.primary, 0.05)
-              : alpha(theme.colors.light.primary, 0.05),
-          },
-        },
-      },
-    },
-  }), [isDarkMode, theme]);
 
   return (
     <ClientOnly>

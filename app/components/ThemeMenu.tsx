@@ -13,7 +13,7 @@ import DarkModeIcon from '@mui/icons-material/DarkMode';
 import RestoreIcon from '@mui/icons-material/Restore';
 import SettingsBrightnessIcon from '@mui/icons-material/SettingsBrightness';
 import Tooltip from '@mui/material/Tooltip';
-import type { ThemeOption } from '../hooks/useTheme';
+import { ThemeOption } from '../types';
 
 interface ThemeMenuProps {
   currentTheme?: ThemeOption;
