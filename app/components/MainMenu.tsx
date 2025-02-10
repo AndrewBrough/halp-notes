@@ -1,10 +1,11 @@
-import { Menu, MenuItem, IconButton, Divider, Typography } from '@mui/material';
+import { Menu, MenuItem, IconButton, Divider, Typography, Chip } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import KeyboardIcon from '@mui/icons-material/Keyboard';
 import { useState } from 'react';
 import { useNotes } from '../context/NotesContext';
 import { SHORTCUTS, formatShortcut } from '../constants/shortcuts';
+
 
 export const MainMenu = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -54,9 +55,30 @@ export const MainMenu = () => {
             Keyboard Shortcuts
           </Typography>
           {Object.entries(SHORTCUTS).map(([key, shortcut]) => (
-            <Typography key={key} variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
-              {shortcut.description}:{' '}
-              <strong>{formatShortcut(shortcut.keys)}</strong>
+            <Typography 
+              key={key} 
+              variant="body2" 
+              color="text.secondary" 
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: 'auto 1fr',
+                gap: '12px',
+                width: '100%',
+                alignItems: 'center',
+                mb: 0.5
+              }}
+            >
+              <Chip 
+                label={formatShortcut(shortcut.keys)}
+                size="small"
+                variant="outlined"
+                sx={{ 
+                  fontFamily: 'monospace',
+                  borderRadius: '4px',
+                  height: '24px'
+                }}
+              />
+              {shortcut.description}
             </Typography>
           ))}
         </MenuItem>

@@ -16,6 +16,7 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { useNotes } from '../context/NotesContext';
 import { styled } from '@mui/material/styles';
 import RestoreIcon from '@mui/icons-material/Restore';
+import Tooltip from '@mui/material/Tooltip';
 
 interface NoteDialogProps {
   open: boolean;
@@ -241,12 +242,14 @@ export default function NoteDialog({
         />
       </DialogContent>
       <DialogActions>
-        <Button 
-          onClick={onClose} 
-          data-cancel-button
-        >
-          Cancel
-        </Button>
+        <Tooltip title="Press Esc to cancel">
+          <Button 
+            onClick={onClose} 
+            data-cancel-button
+          >
+            Cancel
+          </Button>
+        </Tooltip>
         {!existingNote && (
           <Button 
             onClick={handleSaveAndNew} 
@@ -255,13 +258,15 @@ export default function NoteDialog({
             Save & New
           </Button>
         )}
-        <Button 
-          onClick={handleSave} 
-          variant="contained" 
-          color="primary"
-        >
-          Save
-        </Button>
+        <Tooltip title="Press Enter to save">
+          <Button 
+            onClick={handleSave} 
+            variant="contained" 
+            color="primary"
+          >
+            Save
+          </Button>
+        </Tooltip>
       </DialogActions>
     </Dialog>
   );

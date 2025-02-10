@@ -3,14 +3,22 @@ export const SHORTCUTS = {
     keys: ['N'],
     description: 'Create new note'
   },
+  CLOSE_DIALOG: {
+    keys: ['Esc'],
+    description: 'Close note dialog'
+  },
+  SAVE_NOTE: {
+    keys: ['Enter'],
+    description: 'Save note while creating or editing'
+  },
   EDIT_NOTE: {
     keys: ['E'],
-    description: 'Edit hovered note'
+    description: 'Edit hovered or tabbed over note'
   },
   DELETE_NOTE: {
     keys: ['D'],
-    description: 'Delete hovered note'
-  }
+    description: 'Delete hovered or tabbed over note'
+  },
 } as const;
 
 // Helper to format the shortcut for display
