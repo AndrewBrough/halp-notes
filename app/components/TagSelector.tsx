@@ -1,9 +1,10 @@
-import { Autocomplete, Chip, TextField } from '@mui/material';
+import { Autocomplete, Chip, TextField, InputAdornment } from '@mui/material';
 import { alpha, useTheme } from '@mui/material/styles';
 import { useNotes } from '../context/NotesContext';
 import { useState, useEffect, useRef } from 'react';
 import { createFilterOptions } from '@mui/material/Autocomplete';
 import { isInputFocused } from '../utils/keyboard';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 
 export default function TagSelector() {
   const { tags, selectedTags, setSelectedTags } = useNotes();
@@ -74,13 +75,57 @@ export default function TagSelector() {
       sx={{
         '& .MuiInputBase-root': {
           backgroundColor: alpha(theme.palette.primary.main, 0.05),
+          transition: 'padding-left 0.2s ease-in-out',
+          paddingLeft: '32px',
+          '&.Mui-focused': {
+            paddingLeft: '12px',
+          },
+          '& .MuiInputAdornment-root': {
+            position: 'absolute',
+            left: '8px',
+            transition: 'transform 0.2s ease-in-out, opacity 0.2s ease-in-out',
+            '&.Mui-focused': {
+              transform: 'translateX(-100%)',
+              opacity: 0,
+            }
+          }
         },
       }}
       renderInput={(params) => (
         <TextField 
           {...params} 
           inputRef={filterInputRef}
-          label="Filter by tags" 
+          label="Filter by tags"
+          InputProps={{
+            ...params.InputProps,
+            startAdornment: (
+              <>
+                <InputAdornment 
+                  position="start"
+                  sx={{
+                    transition: 'all 0.2s ease-in-out',
+                    '.MuiSvgIcon-root': {
+                      fontSize: '1.2rem',
+                      transition: 'transform 0.2s ease-in-out',
+                    },
+                    '.MuiInputBase-root:hover &': {
+                      '.MuiSvgIcon-root': {
+                        transform: 'scale(1.2)',
+                      }
+                    },
+                    '.MuiInputBase-root.Mui-focused &': {
+                      transform: 'scale(0)',
+                      width: 0,
+                      marginRight: 0,
+                    }
+                  }}
+                >
+                  <LocalOfferIcon color="action" />
+                </InputAdornment>
+                {params.InputProps.startAdornment}
+              </>
+            ),
+          }}
         />
       )}
       renderTags={(value) =>

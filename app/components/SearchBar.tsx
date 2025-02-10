@@ -6,6 +6,7 @@ import HistoryIcon from '@mui/icons-material/History';
 import Tooltip from '@mui/material/Tooltip';
 import { useRef, useEffect } from 'react';
 import { isInputFocused } from '../utils/keyboard';
+import SearchIcon from '@mui/icons-material/Search';
 
 export default function SearchBar() {
   const { searchQuery, setSearchQuery, notes } = useNotes();
@@ -47,6 +48,30 @@ export default function SearchBar() {
         }
       }}
       InputProps={{
+        startAdornment: (
+          <InputAdornment 
+            position="start"
+            sx={{
+              transition: 'all 0.2s ease-in-out',
+              '.MuiSvgIcon-root': {
+                fontSize: '1.2rem',
+                transition: 'transform 0.2s ease-in-out',
+              },
+              '.MuiInputBase-root:hover &': {
+                '.MuiSvgIcon-root': {
+                  transform: 'scale(1.2)',
+                }
+              },
+              '.MuiInputBase-root.Mui-focused &': {
+                transform: 'scale(0)',
+                width: 0,
+                marginRight: 0,
+              }
+            }}
+          >
+            <SearchIcon color="action" />
+          </InputAdornment>
+        ),
         endAdornment: hasVersionMatches && (
           <InputAdornment position="end">
             <Tooltip title="Matches found in version history">
@@ -59,6 +84,20 @@ export default function SearchBar() {
         mb: 2,
         '& .MuiInputBase-root': {
           backgroundColor: alpha(theme.palette.primary.main, 0.05),
+          transition: 'padding-left 0.2s ease-in-out',
+          paddingLeft: '32px',
+          '&.Mui-focused': {
+            paddingLeft: '12px',
+          },
+          '& .MuiInputAdornment-root': {
+            position: 'absolute',
+            left: '8px',
+            transition: 'transform 0.2s ease-in-out, opacity 0.2s ease-in-out',
+            '&.Mui-focused': {
+              transform: 'translateX(-100%)',
+              opacity: 0,
+            }
+          }
         },
       }}
     />
