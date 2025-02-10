@@ -27,18 +27,17 @@ export default function ViewToggle({ view, onViewChange }: ViewToggleProps) {
         size="small"
         sx={{
           '& .MuiToggleButton-root': {
+            color: 'text.primary',
             borderColor: isDarkMode ? theme.colors.dark.primary : theme.colors.light.primary,
-            '& .MuiTouchRipple-child': {
+            '&.Mui-selected': {
+              color: '#fff',
               backgroundColor: isDarkMode ? theme.colors.dark.primary : theme.colors.light.primary,
+              '&:hover': {
+                backgroundColor: alpha(isDarkMode ? theme.colors.dark.primary : theme.colors.light.primary, 0.8),
+              },
             },
             '&:hover': {
-              backgroundColor: alpha(isDarkMode ? theme.colors.dark.primary : theme.colors.light.primary, 0.08),
-            },
-            '&.Mui-selected': {
-              backgroundColor: isDarkMode ? theme.colors.dark.secondary : theme.colors.light.secondary,
-              '&:hover': {
-                backgroundColor: alpha(isDarkMode ? theme.colors.dark.secondary : theme.colors.light.secondary, 0.8),
-              },
+              backgroundColor: alpha(isDarkMode ? theme.colors.dark.primary : theme.colors.light.primary, 0.04),
             },
           },
           '& .MuiToggleButton-root:not(:last-child)': {

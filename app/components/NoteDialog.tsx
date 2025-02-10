@@ -246,6 +246,7 @@ export default function NoteDialog({
           <Button 
             onClick={onClose} 
             data-cancel-button
+            sx={{ color: 'text.primary' }}
           >
             Cancel
           </Button>
@@ -254,6 +255,7 @@ export default function NoteDialog({
           <Button 
             onClick={handleSaveAndNew} 
             color="primary"
+            sx={{ color: 'text.primary' }}
           >
             Save & New
           </Button>

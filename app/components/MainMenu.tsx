@@ -28,6 +28,9 @@ import PaletteIcon from '@mui/icons-material/Palette';
 import { isInputFocused } from '../utils/keyboard';
 import { foodNotes } from '../defaultNotes/foodNotes';
 import { STORAGE_KEY } from '../context/NotesContext';
+import { alpha } from '@mui/material/styles';
+import { ThemeSection } from './menu/ThemeSection';
+import { KeyboardShortcutsSection } from './menu/KeyboardShortcutsSection';
 
 interface MainMenuProps {
   sx?: object;
@@ -88,6 +91,18 @@ export const MainMenu = ({ sx }: MainMenuProps) => {
     }
   };
 
+  // Update the common button styles for the menu buttons
+  const buttonSx = {
+    justifyContent: 'flex-start', 
+    textAlign: 'left',
+    mb: 2,
+    backgroundColor: isDarkMode ? currentTheme.colors.dark.primary : currentTheme.colors.light.primary,
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: alpha(isDarkMode ? currentTheme.colors.dark.primary : currentTheme.colors.light.primary, 0.8),
+    }
+  };
+
   return (
     <>
       <Tooltip 
@@ -110,137 +125,38 @@ export const MainMenu = ({ sx }: MainMenuProps) => {
         open={isOpen}
         onClose={handleClose}
       >
-        <Box sx={{ width: 320, p: 2 }}>
-          <Button
-            onClick={() => setShowThemeOptions(!showThemeOptions)}
-            startIcon={<PaletteIcon />}
-            variant="outlined"
-            fullWidth
-            sx={{ 
-              mb: 2,
-              justifyContent: 'flex-start',
-              textAlign: 'left'
-            }}
-          >
-            Customize Theme
-          </Button>
-
-          <Collapse in={showThemeOptions} timeout="auto">
-            <Box sx={{ mb: 2 }}>
-              {themeOptions.map((option) => (
-                <MenuItem
-                  key={option.value}
-                  onClick={() => setTheme(option)}
-                  selected={option.value === currentTheme.value}
-                  sx={{ width: '100%', textAlign: 'left' }}
-                >
-                  <ListItemIcon>
-                    <div
-                      style={{
-                        width: 20,
-                        height: 20,
-                        borderRadius: '50%',
-                        background: option.colors.light.primary,
-                      }}
-                    />
-                  </ListItemIcon>
-                  <ListItemText sx={{ textAlign: 'left' }}>{option.name}</ListItemText>
-                </MenuItem>
-              ))}
-              <MenuItem sx={{ width: '100%', textAlign: 'left' }}>
-                <ListItemIcon>
-                  <DarkModeIcon />
-                </ListItemIcon>
-                <ListItemText sx={{ textAlign: 'left' }}>Dark Mode</ListItemText>
-                <Switch
-                  edge="end"
-                  checked={isDarkMode}
-                  onChange={(e) => setIsDarkMode(e.target.checked)}
-                />
-              </MenuItem>
-              <MenuItem onClick={resetTheme} sx={{ width: '100%', textAlign: 'left' }}>
-                <ListItemIcon>
-                  <RestoreIcon />
-                </ListItemIcon>
-                <ListItemText sx={{ textAlign: 'left' }}>Reset to Default</ListItemText>
-              </MenuItem>
-            </Box>
-          </Collapse>
+        <Box sx={{ width: 320, p: 2, display: 'flex', flexDirection: 'column', height: '100%' }}>
+          <KeyboardShortcutsSection />
+          <ThemeSection buttonSx={buttonSx} />
 
           <Button
             onClick={handleRestoreTutorials}
             startIcon={<HelpOutlineIcon />}
-            variant="outlined"
+            variant="contained"
             fullWidth
-            sx={{ justifyContent: 'flex-start', textAlign: 'left', mb: 2 }}
+            sx={{...buttonSx, mt: 'auto'}}
           >
             Restore Tutorial Notes
           </Button>
           <Button
             onClick={handleAddFoodNotes}
             startIcon={<RestaurantIcon />}
-            variant="outlined"
+            variant="contained"
             fullWidth
-            sx={{ justifyContent: 'flex-start', textAlign: 'left', mb: 2 }}
+            sx={buttonSx}
           >
             Add Sample Food Notes
           </Button>
           <Button
             onClick={handleClearData}
             startIcon={<DeleteSweepIcon />}
-            variant="outlined"
+            variant="contained"
             color="error"
             fullWidth
             sx={{ justifyContent: 'flex-start', textAlign: 'left' }}
           >
             Clear All Data
           </Button>
-          <Divider sx={{ my: 2 }} />
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-            <KeyboardIcon sx={{ mr: 1 }} />
-            <Typography variant="subtitle2">
-              Keyboard Shortcuts
-            </Typography>
-          </Box>
-          {Object.entries(SHORTCUT_CATEGORIES).map(([category, shortcuts]) => (
-            <Box key={category} sx={{ mb: 2 }}>
-              <Typography 
-                variant="overline" 
-                sx={{ 
-                  display: 'block',
-                  mb: 0.5 
-                }}
-              >
-                {category}
-              </Typography>
-              {Object.entries(shortcuts).map(([key, shortcut]) => (
-                <Typography
-                  key={key} 
-                  variant="body2"
-                  sx={{
-                    display: 'grid',
-                    gridTemplateColumns: 'auto 1fr',
-                    gap: '12px',
-                    width: '100%',
-                    alignItems: 'center',
-                    mb: 0.5
-                  }}
-                >
-                  <Chip 
-                    label={formatShortcut(shortcut.keys)}
-                    size="small"
-                    variant="outlined"
-                    sx={{ 
-                      fontFamily: 'monospace',
-                      borderRadius: '4px',
-                      height: '24px'
-                    }}
-                  />
-                  {shortcut.description}
-                </Typography>
-              ))}
-            </Box>
-          ))}
         </Box>
       </Drawer>
     </>

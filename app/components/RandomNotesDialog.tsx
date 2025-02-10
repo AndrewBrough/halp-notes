@@ -99,7 +99,12 @@ export default function RandomNotesDialog({ open, onClose, notes, availableTags 
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
+          <Button 
+            onClick={handleClose}
+            sx={{ color: 'text.primary' }}
+          >
+            Cancel
+          </Button>
           <Button 
             onClick={handleStartGeneration} 
             variant="contained"
@@ -128,10 +133,15 @@ export default function RandomNotesDialog({ open, onClose, notes, availableTags 
               onClick={getRandomNotes}
               variant="outlined"
               size="small"
+              sx={{ color: 'text.primary' }}
             >
               Re-roll
             </Button>
-            <IconButton size="small" onClick={handleClose}>
+            <IconButton 
+              size="small" 
+              onClick={handleClose}
+              sx={{ color: 'text.primary' }}
+            >
               <CloseIcon />
             </IconButton>
           </Stack>
