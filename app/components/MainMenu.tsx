@@ -154,7 +154,7 @@ export const MainMenu = ({ sx }: MainMenuProps) => {
             Restore Tutorial Notes
           </Button>
           <Divider sx={{ my: 2 }} />
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
             <KeyboardIcon sx={{ mr: 1 }} />
             <Typography variant="subtitle2">
               Keyboard Shortcuts
@@ -165,7 +165,6 @@ export const MainMenu = ({ sx }: MainMenuProps) => {
               <Typography 
                 variant="overline" 
                 sx={{ 
-                  color: 'text.secondary',
                   display: 'block',
                   mb: 0.5 
                 }}
@@ -173,10 +172,9 @@ export const MainMenu = ({ sx }: MainMenuProps) => {
                 {category}
               </Typography>
               {Object.entries(shortcuts).map(([key, shortcut]) => (
-                <Typography 
+                <Typography
                   key={key} 
-                  variant="body2" 
-                  color="text.secondary" 
+                  variant="body2"
                   sx={{
                     display: 'grid',
                     gridTemplateColumns: 'auto 1fr',

@@ -70,7 +70,7 @@ export default function RandomNotesDialog({ open, onClose, notes, availableTags 
       >
         <DialogTitle>
           <Box display="flex" justifyContent="space-between" alignItems="center">
-            <Typography variant="h6">What do you need halp with?</Typography>
+            <Typography variant="h6">What&apos;s the issue?</Typography>
           </Box>
         </DialogTitle>
         <DialogContent>
@@ -105,7 +105,7 @@ export default function RandomNotesDialog({ open, onClose, notes, availableTags 
             variant="contained"
             disabled={selectedTags.length === 0}
           >
-            Generate Random Notes
+            Get halp
           </Button>
         </DialogActions>
       </Dialog>
