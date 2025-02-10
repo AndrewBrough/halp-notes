@@ -41,6 +41,11 @@ import RandomNotesButton from './components/RandomNotesButton';
 import RandomNotesDialog from './components/RandomNotesDialog';
 import ViewToggle from './components/ViewToggle';
 import { format } from 'date-fns';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogActions from '@mui/material/DialogActions';
 
 const cedarville = Cedarville_Cursive({ 
   weight: '400',
@@ -74,6 +79,10 @@ export default function Home() {
   const [allTagsExpanded, setAllTagsExpanded] = useState(true);
   const [allDatesExpanded, setAllDatesExpanded] = useState(true);
   const [collapsedDates, setCollapsedDates] = useState<Set<string>>(new Set());
+  const [deleteConfirmation, setDeleteConfirmation] = useState<{
+    open: boolean;
+    noteId: string | null;
+  }>({ open: false, noteId: null });
 
   const groupedNotes = useMemo(() => {
     const groups: { [key: string]: Note[] } = {};
@@ -173,6 +182,17 @@ export default function Home() {
       });
   }, [notes]);
 
+  const handleDeleteNote = (noteId: string) => {
+    setDeleteConfirmation({ open: true, noteId });
+  };
+
+  const handleConfirmDelete = () => {
+    if (deleteConfirmation.noteId) {
+      deleteNote(deleteConfirmation.noteId);
+    }
+    setDeleteConfirmation({ open: false, noteId: null });
+  };
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (isInputFocused()) return;
@@ -188,13 +208,13 @@ export default function Home() {
       
       if (e.key.toLowerCase() === 'd') {
         e.preventDefault();
-        deleteNote(hoveredNoteId);
+        handleDeleteNote(hoveredNoteId);
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [hoveredNoteId, notes, handleEditNote, deleteNote]);
+  }, [hoveredNoteId, notes, handleEditNote]);
 
   return (
     <ClientOnly>
@@ -400,7 +420,7 @@ export default function Home() {
                                   <Tooltip title="Delete note (D)" arrow placement="top">
                                     <IconButton
                                       size="small"
-                                      onClick={() => deleteNote(note.id)}
+                                      onClick={() => handleDeleteNote(note.id)}
                                     >
                                       <DeleteIcon sx={{ fontSize: 18 }} />
                                     </IconButton>
@@ -532,7 +552,7 @@ export default function Home() {
                                 <Tooltip title="Delete note (D)" arrow placement="top">
                                   <IconButton
                                     size="small"
-                                    onClick={() => deleteNote(note.id)}
+                                    onClick={() => handleDeleteNote(note.id)}
                                   >
                                     <DeleteIcon sx={{ fontSize: 18 }} />
                                   </IconButton>
@@ -565,6 +585,32 @@ export default function Home() {
             notes={notes}
             availableTags={tags}
           />
+
+          <Dialog
+            open={deleteConfirmation.open}
+            onClose={() => setDeleteConfirmation({ open: false, noteId: null })}
+          >
+            <DialogTitle>Delete Note</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Are you sure you want to delete this note? This action cannot be undone.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button 
+                onClick={() => setDeleteConfirmation({ open: false, noteId: null })}
+              >
+                Cancel
+              </Button>
+              <Button 
+                onClick={handleConfirmDelete} 
+                color="error" 
+                variant="contained"
+              >
+                Delete
+              </Button>
+            </DialogActions>
+          </Dialog>
         </Container>
       </ThemeProvider>
     </ClientOnly>

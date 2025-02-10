@@ -70,7 +70,7 @@ export default function RandomNotesDialog({ open, onClose, notes, availableTags 
       >
         <DialogTitle>
           <Box display="flex" justifyContent="space-between" alignItems="center">
-            <Typography variant="h6">What&apos;s the issue?</Typography>
+            <Typography variant="h6">Hi friend, what do you need help with today?</Typography>
           </Box>
         </DialogTitle>
         <DialogContent>
@@ -180,7 +180,7 @@ export default function RandomNotesDialog({ open, onClose, notes, availableTags 
           ))}
           {randomNotes.length === 0 && (
             <Typography color="text.secondary" align="center">
-              No notes found with the selected tags.
+              {"Sorry, I couldn't find anything. You'll need to make some notes first :("}
             </Typography>
           )}
         </Stack>
