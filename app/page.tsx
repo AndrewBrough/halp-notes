@@ -229,7 +229,7 @@ export default function Home() {
                 .sort(([dateA], [dateB]) => dateB.localeCompare(dateA))
                 .map(([date, notes]) => (
                   <div key={date}>
-                    <h2 className="text-lg font-semibold mb-2 mt-8 text-gray-700 dark:text-gray-300">
+                    <h2 className="text-lg font-normal mb-2 mt-8 text-gray-700 dark:text-gray-300">
                       {format(new Date(date), 'EEEE, MMMM d, yyyy')}
                     </h2>
                     <Grid container spacing={2}>
@@ -369,11 +369,12 @@ export default function Home() {
                   {!collapsedTags.has(tag) && (
                     <Grid container spacing={2}>
                       {notes.map((note) => (
-                        <Grid item xs={12} key={note.id}>
+                        <Grid item xs={12} sm={6} key={note.id}>
                           <Card
                             onMouseEnter={() => setHoveredNoteId(note.id)}
                             onMouseLeave={() => setHoveredNoteId(null)}
                             sx={{
+                              height: '100%',  // This ensures cards in the same row have equal height
                               position: 'relative',
                               '& .note-actions': {
                                 opacity: 0,
