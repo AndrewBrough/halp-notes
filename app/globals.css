@@ -87,34 +87,4 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
-  overflow-x: hidden; /* Prevent horizontal scrolling */
-}
-
-body {
-  position: fixed; /* Keep the background fixed */
-  width: 100%;
-  height: 100%;
-}
-
-main {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  overflow-y: auto; /* Enable scrolling for content */
-  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-}
-
-/* If you're using Next.js default root element */
-#__next {
-  min-height: 100vh;
-  height: 100%;
-}
-
-/* Reset default margin */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
 }
