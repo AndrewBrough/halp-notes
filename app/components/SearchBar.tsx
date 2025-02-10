@@ -77,13 +77,6 @@ export default function SearchBar() {
             <SearchIcon />
           </InputAdornment>
         ),
-        endAdornment: hasVersionMatches && (
-          <InputAdornment position="end">
-            <Tooltip title="Matches found in version history">
-              <HistoryIcon color="primary" />
-            </Tooltip>
-          </InputAdornment>
-        ),
       }}
       sx={{
         mb: 2,
