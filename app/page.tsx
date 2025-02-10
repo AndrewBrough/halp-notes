@@ -45,11 +45,22 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
+import { Metadata } from 'next'
 
 const cedarville = Cedarville_Cursive({ 
   weight: '400',
   subsets: ['latin'] 
 })
+
+export const metadata: Metadata = {
+  title: 'Home | Halp notes',
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: `Halp notes - ${new Date().toLocaleDateString()}`,
+  }
+}
 
 export default function Home() {
   const {

@@ -1,6 +1,7 @@
 import './globals.css'
 import { Inter, Cedarville_Cursive } from 'next/font/google'
 import { ClientLayout } from './ClientLayout'
+import { Metadata } from 'next'
 
 const inter = Inter({ subsets: ['latin'] })
 const cedarville = Cedarville_Cursive({ 
@@ -8,15 +9,15 @@ const cedarville = Cedarville_Cursive({
   subsets: ['latin'] 
 })
 
-export const metadata = {
-  title: 'Notes App',
+export const metadata: Metadata = {
+  title: 'Halp notes',
   description: 'A simple notes app with tags',
   manifest: '/manifest.json',
-  themeColor: '#1976d2',
+  themeColor: '#ffc107',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'Notes App',
+    title: 'Halp',
   },
   viewport: {
     width: 'device-width',
