@@ -1,4 +1,12 @@
-import { Menu, MenuItem, IconButton, Divider, Typography, Chip, Box, Button } from '@mui/material';
+import { 
+  IconButton, 
+  Divider, 
+  Typography, 
+  Chip, 
+  Box, 
+  Button,
+  Drawer
+} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import KeyboardIcon from '@mui/icons-material/Keyboard';
@@ -6,18 +14,12 @@ import { useState } from 'react';
 import { useNotes } from '../context/NotesContext';
 import { SHORTCUTS, formatShortcut } from '../constants/shortcuts';
 
-
 export const MainMenu = () => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
   const { restoreTutorialNotes } = useNotes();
-  const open = Boolean(anchorEl);
-
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
 
   const handleClose = () => {
-    setAnchorEl(null);
+    setIsOpen(false);
   };
 
   const handleRestoreTutorials = () => {
@@ -28,7 +30,7 @@ export const MainMenu = () => {
   return (
     <>
       <IconButton
-        onClick={handleClick}
+        onClick={() => setIsOpen(true)}
         size="large"
         edge="start"
         color="inherit"
@@ -36,12 +38,12 @@ export const MainMenu = () => {
       >
         <MenuIcon />
       </IconButton>
-      <Menu
-        anchorEl={anchorEl}
-        open={open}
+      <Drawer
+        anchor="left"
+        open={isOpen}
         onClose={handleClose}
       >
-        <Box sx={{ p: 2 }}>
+        <Box sx={{ width: 280, p: 2 }}>
           <Button
             onClick={handleRestoreTutorials}
             startIcon={<HelpOutlineIcon />}
@@ -50,9 +52,7 @@ export const MainMenu = () => {
           >
             Restore Tutorial Notes
           </Button>
-        </Box>
-        <Divider />
-        <Box sx={{ p: 2 }}>
+          <Divider sx={{ my: 2 }} />
           <Typography
             variant="subtitle2"
             sx={{ display: 'flex', alignItems: 'center', mb: 1 }}
@@ -88,7 +88,7 @@ export const MainMenu = () => {
             </Typography>
           ))}
         </Box>
-      </Menu>
+      </Drawer>
     </>
   );
 }; 
