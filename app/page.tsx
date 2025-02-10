@@ -31,6 +31,8 @@ import { SHORTCUTS } from './constants/shortcuts';
 import ClientOnly from './components/ClientOnly';
 import { Note } from './types';
 import { isInputFocused } from './utils/keyboard';
+import RandomNotesButton from './components/RandomNotesButton';
+import RandomNotesDialog from './components/RandomNotesDialog';
 
 const cedarville = Cedarville_Cursive({ 
   weight: '400',
@@ -56,6 +58,7 @@ export default function Home() {
   const [editingNote, setEditingNote] = useState<Note | undefined>();
   const [expandedNotes, setExpandedNotes] = useState<Set<string>>(new Set());
   const [hoveredNoteId, setHoveredNoteId] = useState<string | null>(null);
+  const [randomNotesOpen, setRandomNotesOpen] = useState(false);
 
   const handleAddNote = () => {
     setEditingNote(undefined);
@@ -247,12 +250,20 @@ export default function Home() {
           </Grid>
 
           <NewNoteButton onNewNote={handleAddNote} />
+          <RandomNotesButton onClick={() => setRandomNotesOpen(true)} />
 
           <NoteDialog
             open={dialogOpen}
             onClose={() => setDialogOpen(false)}
             onSave={handleSaveNote}
             existingNote={editingNote}
+          />
+
+          <RandomNotesDialog
+            open={randomNotesOpen}
+            onClose={() => setRandomNotesOpen(false)}
+            notes={notes}
+            availableTags={tags}
           />
         </Container>
       </ThemeProvider>
