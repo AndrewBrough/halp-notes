@@ -251,6 +251,7 @@ export default function Home() {
                 startIcon={allTagsExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                 onClick={toggleAllTags}
                 size="small"
+                sx={{ color: 'text.primary' }}
               >
                 {allTagsExpanded ? 'Collapse All' : 'Expand All'}
               </Button>
@@ -259,6 +260,7 @@ export default function Home() {
                 startIcon={allDatesExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                 onClick={toggleAllDates}
                 size="small"
+                sx={{ color: 'text.primary' }}
               >
                 {allDatesExpanded ? 'Collapse All' : 'Expand All'}
               </Button>

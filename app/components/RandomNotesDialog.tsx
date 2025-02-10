@@ -70,21 +70,16 @@ export default function RandomNotesDialog({ open, onClose, notes, availableTags 
       >
         <DialogTitle>
           <Box display="flex" justifyContent="space-between" alignItems="center">
-            <Typography variant="h6">Select Tags for Random Notes</Typography>
-            <IconButton size="small" onClick={handleClose}>
-              <CloseIcon />
-            </IconButton>
+            <Typography variant="h6">What do you need halp with?</Typography>
           </Box>
         </DialogTitle>
         <DialogContent>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-            Select tags to filter the random notes. Notes will be selected that contain all chosen tags.
-          </Typography>
           <Autocomplete
             multiple
             options={availableTags}
             value={selectedTags}
             onChange={(_, newValue) => setSelectedTags(newValue)}
+            sx={{ mt: 0.75 }}
             renderInput={(params) => (
               <TextField
                 {...params}
