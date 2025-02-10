@@ -10,6 +10,7 @@ import {
   ListItemIcon,
   ListItemText,
   Switch,
+  Collapse,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
@@ -63,24 +64,29 @@ export const MainMenu = () => {
         open={isOpen}
         onClose={handleClose}
       >
-        <Box sx={{ width: 280, p: 2 }}>
+        <Box sx={{ width: 320, p: 2 }}>
           <Button
             onClick={() => setShowThemeOptions(!showThemeOptions)}
             startIcon={<PaletteIcon />}
             variant="outlined"
             fullWidth
-            sx={{ mb: showThemeOptions ? 2 : 0 }}
+            sx={{ 
+              mb: 2,
+              justifyContent: 'flex-start',
+              textAlign: 'left'
+            }}
           >
             Customize Theme
           </Button>
 
-          {showThemeOptions && (
-            <>
+          <Collapse in={showThemeOptions} timeout="auto">
+            <Box sx={{ mb: 2 }}>
               {themeOptions.map((option) => (
                 <MenuItem
                   key={option.value}
                   onClick={() => setTheme(option)}
                   selected={option.value === currentTheme.value}
+                  sx={{ width: '100%', textAlign: 'left' }}
                 >
                   <ListItemIcon>
                     <div
@@ -92,14 +98,14 @@ export const MainMenu = () => {
                       }}
                     />
                   </ListItemIcon>
-                  <ListItemText>{option.name}</ListItemText>
+                  <ListItemText sx={{ textAlign: 'left' }}>{option.name}</ListItemText>
                 </MenuItem>
               ))}
-              <MenuItem onClick={() => setIsDarkMode(!isDarkMode)}>
+              <MenuItem sx={{ width: '100%', textAlign: 'left' }}>
                 <ListItemIcon>
                   <DarkModeIcon />
                 </ListItemIcon>
-                <ListItemText>Dark Mode</ListItemText>
+                <ListItemText sx={{ textAlign: 'left' }}>Dark Mode</ListItemText>
                 <Switch
                   edge="end"
                   checked={isDarkMode}
@@ -107,7 +113,7 @@ export const MainMenu = () => {
                   onChange={(e) => setIsDarkMode(e.target.checked)}
                 />
               </MenuItem>
-              <MenuItem onClick={() => setIsDarkMode('auto')}>
+              <MenuItem sx={{ width: '100%', textAlign: 'left' }}>
                 <Tooltip 
                   title="Will automatically change to dark mode after sunset and before sunrise"
                   placement="right"
@@ -116,7 +122,7 @@ export const MainMenu = () => {
                     <ListItemIcon>
                       <SettingsBrightnessIcon />
                     </ListItemIcon>
-                    <ListItemText>Auto Dark Mode</ListItemText>
+                    <ListItemText sx={{ textAlign: 'left' }}>Auto Dark Mode</ListItemText>
                   </div>
                 </Tooltip>
                 <Switch
@@ -125,14 +131,14 @@ export const MainMenu = () => {
                   onChange={(e) => setIsDarkMode(e.target.checked ? 'auto' : false)}
                 />
               </MenuItem>
-              <MenuItem onClick={resetTheme}>
+              <MenuItem onClick={resetTheme} sx={{ width: '100%', textAlign: 'left' }}>
                 <ListItemIcon>
                   <RestoreIcon />
                 </ListItemIcon>
-                <ListItemText>Reset to Default</ListItemText>
+                <ListItemText sx={{ textAlign: 'left' }}>Reset to Default</ListItemText>
               </MenuItem>
-            </>
-          )}
+            </Box>
+          </Collapse>
 
           <Divider sx={{ my: 2 }} />
           <Button
@@ -140,17 +146,17 @@ export const MainMenu = () => {
             startIcon={<HelpOutlineIcon />}
             variant="outlined"
             fullWidth
+            sx={{ justifyContent: 'flex-start', textAlign: 'left' }}
           >
             Restore Tutorial Notes
           </Button>
           <Divider sx={{ my: 2 }} />
-          <Typography
-            variant="subtitle2"
-            sx={{ display: 'flex', alignItems: 'center', mb: 1 }}
-          >
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
             <KeyboardIcon sx={{ mr: 1 }} />
-            Keyboard Shortcuts
-          </Typography>
+            <Typography variant="subtitle2">
+              Keyboard Shortcuts
+            </Typography>
+          </Box>
           {Object.entries(SHORTCUTS).map(([key, shortcut]) => (
             <Typography 
               key={key} 
