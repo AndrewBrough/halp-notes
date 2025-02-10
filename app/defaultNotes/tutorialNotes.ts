@@ -8,7 +8,7 @@ const createVersionHistory = (baseTitle: string, baseContent: string, count: num
     title: baseTitle,
     content: `${baseContent} - Revision ${i + 1}`,
     tags: ['tutorial'],
-    updatedAt: now - (((count - 1) - i) * 86400000) // Reversed: oldest version has oldest date
+    updatedAt: now // All versions set to now
   }));
 };
 
@@ -31,25 +31,25 @@ export const tutorialNotes: Note[] = [
     title: '✍️ Creating & Organizing',
     content: 'Click the + button to create a new note. Add tags to organize your notes and use the tag filter above to find them quickly. You can edit notes anytime by clicking the pencil icon.',
     tags: ['tutorial'],
-    createdAt: now - 86400000, // One day ago
-    updatedAt: now - 86400000,
+    createdAt: now, // Changed from now - 86400000
+    updatedAt: now,
     versions: createVersionHistory(
       '✍️ Creating Notes',
       'Learn how to create and organize your notes effectively with our simple tools.',
       10
-    ).map(v => ({ ...v, updatedAt: v.updatedAt - 86400000 })) // Offset by one day
+    )
   },
   {
     id: 'tutorial-3',
     title: '🎨 Customize & Search',
     content: 'Use the palette icon to change themes and toggle dark mode. The search bar helps you find notes by title or content. Try searching for "tutorial" to find these notes again!',
     tags: ['tutorial'],
-    createdAt: now - (86400000 * 2), // Two days ago
-    updatedAt: now - (86400000 * 2),
+    createdAt: now, // Changed from now - (86400000 * 2)
+    updatedAt: now,
     versions: createVersionHistory(
       '🎨 Customization Guide',
       'Discover how to personalize your note-taking experience with themes and search features.',
       10
-    ).map(v => ({ ...v, updatedAt: v.updatedAt - (86400000 * 2) })) // Offset by two days
+    )
   }
 ]; 
