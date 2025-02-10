@@ -105,20 +105,16 @@ function isValidThemeKey(key: string): key is ThemeKey {
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [currentTheme, setCurrentTheme] = useState<ThemeKey>();
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('themeKey') || 'gold';
-    if (isValidThemeKey(savedTheme)) {
-      setCurrentTheme(savedTheme);
-    }
-    
+  const [currentTheme, setCurrentTheme] = useState<ThemeKey>(() => {
+    if (typeof window === 'undefined') return 'gold';
+    return (localStorage.getItem('themeKey') || 'gold') as ThemeKey;
+  });
+  
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
     const savedDarkMode = localStorage.getItem('isDarkMode');
-    if (savedDarkMode !== null) {
-      setIsDarkMode(savedDarkMode === 'true');
-    }
-  }, []);
+    return savedDarkMode === 'true';
+  });
 
   useEffect(() => {
     currentTheme && localStorage.setItem('themeKey', currentTheme);
