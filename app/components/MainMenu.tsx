@@ -19,12 +19,15 @@ import KeyboardIcon from '@mui/icons-material/Keyboard';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import RestoreIcon from '@mui/icons-material/Restore';
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
+import RestaurantIcon from '@mui/icons-material/Restaurant';
 import { useState, useEffect } from 'react';
 import { useNotes } from '../context/NotesContext';
 import { SHORTCUTS, SHORTCUT_CATEGORIES, formatShortcut } from '../constants/shortcuts';
 import { useTheme } from '../context/ThemeContext';
 import PaletteIcon from '@mui/icons-material/Palette';
 import { isInputFocused } from '../utils/keyboard';
+import { foodNotes } from '../defaultNotes/foodNotes';
+import { STORAGE_KEY } from '../context/NotesContext';
 
 interface MainMenuProps {
   sx?: object;
@@ -69,6 +72,18 @@ export const MainMenu = ({ sx }: MainMenuProps) => {
   const handleClearData = () => {
     if (window.confirm('Are you sure you want to clear all data? This action cannot be undone.')) {
       localStorage.clear();
+      window.location.reload();
+    }
+  };
+
+  const handleAddFoodNotes = () => {
+    if (window.confirm('Add sample food notes? This will not affect your existing notes.')) {
+      const existingData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{"notes":[], "tags":[]}');
+      const newData = {
+        notes: [...existingData.notes, ...foodNotes],
+        tags: Array.from(new Set([...existingData.tags, ...foodNotes.flatMap(note => note.tags)]))
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(newData));
       window.location.reload();
     }
   };
@@ -160,6 +175,15 @@ export const MainMenu = ({ sx }: MainMenuProps) => {
             sx={{ justifyContent: 'flex-start', textAlign: 'left', mb: 2 }}
           >
             Restore Tutorial Notes
+          </Button>
+          <Button
+            onClick={handleAddFoodNotes}
+            startIcon={<RestaurantIcon />}
+            variant="outlined"
+            fullWidth
+            sx={{ justifyContent: 'flex-start', textAlign: 'left', mb: 2 }}
+          >
+            Add Sample Food Notes
           </Button>
           <Button
             onClick={handleClearData}

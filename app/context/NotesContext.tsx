@@ -17,7 +17,7 @@ interface NotesContextType {
 
 const NotesContext = createContext<NotesContextType | null>(null);
 
-const STORAGE_KEY = 'notes-app-data';
+export const STORAGE_KEY = 'notes-app-data';
 
 export function NotesProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<NotesState>(() => {
