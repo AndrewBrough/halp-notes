@@ -33,7 +33,6 @@ import { MainMenu } from './components/MainMenu';
 import SearchBar from './components/SearchBar';
 import TagSelector from './components/TagSelector';
 import NewNoteButton from './components/NewNoteButton';
-import { SHORTCUTS } from './constants/shortcuts';
 import ClientOnly from './components/ClientOnly';
 import { Note } from './types';
 import { isInputFocused } from './utils/keyboard';
@@ -335,11 +334,16 @@ export default function Home() {
                         {notes.map((note) => (
                           <Grid item xs={12} sm={6} key={note.id}>
                             <Card
+                              tabIndex={0}
                               onMouseEnter={() => setHoveredNoteId(note.id)}
                               onMouseLeave={() => setHoveredNoteId(null)}
                               sx={{
-                                height: '100%',  // This ensures cards in the same row have equal height
+                                height: '100%',
                                 position: 'relative',
+                                '&:focus': {
+                                  outline: `2px solid ${isDarkMode ? theme.colors.dark.primary : theme.colors.light.primary}`,
+                                  outlineOffset: '2px',
+                                },
                                 '& .note-actions': {
                                   opacity: 0,
                                   transition: 'opacity 0.2s ease-in-out',
@@ -362,7 +366,7 @@ export default function Home() {
                                     }
                                   }
                                 },
-                                '&:hover .note-actions': {
+                                '&:hover .note-actions, &:focus-within .note-actions': {
                                   opacity: 1,
                                 },
                               }}
@@ -467,11 +471,16 @@ export default function Home() {
                       {notes.map((note) => (
                         <Grid item xs={12} sm={6} key={note.id}>
                           <Card
+                            tabIndex={0}
                             onMouseEnter={() => setHoveredNoteId(note.id)}
                             onMouseLeave={() => setHoveredNoteId(null)}
                             sx={{
-                              height: '100%',  // This ensures cards in the same row have equal height
+                              height: '100%',
                               position: 'relative',
+                              '&:focus': {
+                                outline: `2px solid ${isDarkMode ? theme.colors.dark.primary : theme.colors.light.primary}`,
+                                outlineOffset: '2px',
+                              },
                               '& .note-actions': {
                                 opacity: 0,
                                 transition: 'opacity 0.2s ease-in-out',
@@ -494,7 +503,7 @@ export default function Home() {
                                   }
                                 }
                               },
-                              '&:hover .note-actions': {
+                              '&:hover .note-actions, &:focus-within .note-actions': {
                                 opacity: 1,
                               },
                             }}
