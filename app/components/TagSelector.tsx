@@ -1,12 +1,27 @@
 import { Autocomplete, Chip, TextField } from '@mui/material';
 import { alpha, useTheme } from '@mui/material/styles';
 import { useNotes } from '../context/NotesContext';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { createFilterOptions } from '@mui/material/Autocomplete';
+import { isInputFocused } from '../utils/keyboard';
 
 export default function TagSelector() {
   const { tags, selectedTags, setSelectedTags } = useNotes();
   const theme = useTheme();
+  const [inputValue, setInputValue] = useState('');
   const [, forceUpdate] = useState({});
+  const filterInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   useEffect(() => {
     const handleNotesUpdate = () => {
@@ -16,30 +31,57 @@ export default function TagSelector() {
     return () => window.removeEventListener('notes-updated', handleNotesUpdate);
   }, []);
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (isInputFocused()) return;
+      
+      if (event.key.toLowerCase() === 'f') {
+        event.preventDefault();
+        filterInputRef.current?.focus();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   const handleTagChange = (_: any, newValue: string[]) => {
-    setSelectedTags(newValue.map(tag => tag.toLowerCase().trim()));
+    // Only prevent new selections when there's no input
+    // Allow deletions and existing tag selections at any time
+    if (inputValue.length > 0 || newValue.length < selectedTags.length || newValue.every(tag => tags.includes(tag))) {
+      setSelectedTags(newValue.map(tag => tag.toLowerCase().trim()));
+    }
   };
 
   const handleTagDelete = (tagToDelete: string) => {
     setSelectedTags(selectedTags.filter(tag => tag !== tagToDelete));
   };
 
+  const filterOptions = createFilterOptions<string>();
+
   return (
     <Autocomplete
       multiple
       autoHighlight
-      autoSelect
-      selectOnFocus
+      autoSelect={inputValue.length > 0}
+      selectOnFocus={inputValue.length > 0}
       options={tags}
       value={selectedTags}
       onChange={handleTagChange}
+      inputValue={inputValue}
+      onInputChange={(_, newInputValue) => setInputValue(newInputValue)}
+      filterOptions={filterOptions}
       sx={{
         '& .MuiInputBase-root': {
           backgroundColor: alpha(theme.palette.primary.main, 0.05),
         },
       }}
       renderInput={(params) => (
-        <TextField {...params} label="Filter by tags" />
+        <TextField 
+          {...params} 
+          inputRef={filterInputRef}
+          label="Filter by tags" 
+        />
       )}
       renderTags={(value) =>
         value.map((option) => (
@@ -50,6 +92,12 @@ export default function TagSelector() {
           />
         ))
       }
+      onKeyDown={(event) => {
+        if (event.key === 'Escape') {
+          event.preventDefault(); // Prevent the default Autocomplete escape behavior
+          event.currentTarget.blur();
+        }
+      }}
     />
   );
 } 

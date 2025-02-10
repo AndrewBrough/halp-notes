@@ -20,9 +20,10 @@ import DarkModeIcon from '@mui/icons-material/DarkMode';
 import RestoreIcon from '@mui/icons-material/Restore';
 import { useState, useEffect } from 'react';
 import { useNotes } from '../context/NotesContext';
-import { SHORTCUTS, formatShortcut } from '../constants/shortcuts';
+import { SHORTCUTS, SHORTCUT_CATEGORIES, formatShortcut } from '../constants/shortcuts';
 import { useTheme } from '../context/ThemeContext';
 import PaletteIcon from '@mui/icons-material/Palette';
+import { isInputFocused } from '../utils/keyboard';
 
 export const MainMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,7 +40,9 @@ export const MainMenu = () => {
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
-      if (event.key.toLowerCase() === 'h') {
+      if (isInputFocused()) return;
+      
+      if (event.key.toLowerCase() === 'm') {
         event.preventDefault();
         setIsOpen(true);
       }
@@ -153,32 +156,46 @@ export const MainMenu = () => {
               Keyboard Shortcuts
             </Typography>
           </Box>
-          {Object.entries(SHORTCUTS).map(([key, shortcut]) => (
-            <Typography 
-              key={key} 
-              variant="body2" 
-              color="text.secondary" 
-              sx={{
-                display: 'grid',
-                gridTemplateColumns: 'auto 1fr',
-                gap: '12px',
-                width: '100%',
-                alignItems: 'center',
-                mb: 0.5
-              }}
-            >
-              <Chip 
-                label={formatShortcut(shortcut.keys)}
-                size="small"
-                variant="outlined"
+          {Object.entries(SHORTCUT_CATEGORIES).map(([category, shortcuts]) => (
+            <Box key={category} sx={{ mb: 2 }}>
+              <Typography 
+                variant="overline" 
                 sx={{ 
-                  fontFamily: 'monospace',
-                  borderRadius: '4px',
-                  height: '24px'
+                  color: 'text.secondary',
+                  display: 'block',
+                  mb: 0.5 
                 }}
-              />
-              {shortcut.description}
-            </Typography>
+              >
+                {category}
+              </Typography>
+              {Object.entries(shortcuts).map(([key, shortcut]) => (
+                <Typography 
+                  key={key} 
+                  variant="body2" 
+                  color="text.secondary" 
+                  sx={{
+                    display: 'grid',
+                    gridTemplateColumns: 'auto 1fr',
+                    gap: '12px',
+                    width: '100%',
+                    alignItems: 'center',
+                    mb: 0.5
+                  }}
+                >
+                  <Chip 
+                    label={formatShortcut(shortcut.keys)}
+                    size="small"
+                    variant="outlined"
+                    sx={{ 
+                      fontFamily: 'monospace',
+                      borderRadius: '4px',
+                      height: '24px'
+                    }}
+                  />
+                  {shortcut.description}
+                </Typography>
+              ))}
+            </Box>
           ))}
         </Box>
       </Drawer>

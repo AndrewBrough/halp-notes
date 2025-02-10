@@ -30,6 +30,7 @@ import NewNoteButton from './components/NewNoteButton';
 import { SHORTCUTS } from './constants/shortcuts';
 import ClientOnly from './components/ClientOnly';
 import { Note } from './types';
+import { isInputFocused } from './utils/keyboard';
 
 const cedarville = Cedarville_Cursive({ 
   weight: '400',
@@ -88,6 +89,7 @@ export default function Home() {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (isInputFocused()) return;
       if (!hoveredNoteId) return;
 
       if (e.key.toLowerCase() === 'e') {

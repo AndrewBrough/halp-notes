@@ -5,6 +5,7 @@ import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import { Tooltip } from '@mui/material';
 import { SHORTCUTS, formatShortcut } from '../constants/shortcuts';
+import { isInputFocused } from '../utils/keyboard';
 
 interface NewNoteButtonProps {
   onNewNote: () => void;
@@ -13,6 +14,8 @@ interface NewNoteButtonProps {
 export default function NewNoteButton({ onNewNote }: NewNoteButtonProps) {
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
+      if (isInputFocused()) return;
+
       if (event.key.toLowerCase() === 'n') {
         event.preventDefault();
         event.stopPropagation();
