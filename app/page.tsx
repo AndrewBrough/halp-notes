@@ -38,6 +38,7 @@ import { isInputFocused } from './utils/keyboard';
 import RandomNotesButton from './components/RandomNotesButton';
 import RandomNotesDialog from './components/RandomNotesDialog';
 import ViewToggle from './components/ViewToggle';
+import { format } from 'date-fns';
 
 const cedarville = Cedarville_Cursive({ 
   weight: '400',
@@ -135,6 +136,21 @@ export default function Home() {
       });
   }, [notes]);
 
+  // Group notes by date
+  const groupedNotes = useMemo(() => {
+    const groups: { [key: string]: Note[] } = {};
+    
+    notes.forEach((note) => {
+      const dateKey = format(new Date(note.createdAt), 'yyyy-MM-dd');
+      if (!groups[dateKey]) {
+        groups[dateKey] = [];
+      }
+      groups[dateKey].push(note);
+    });
+    
+    return groups;
+  }, [notes]);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (isInputFocused()) return;
@@ -208,105 +224,117 @@ export default function Home() {
           <ViewToggle view={viewMode} onViewChange={setViewMode} />
 
           {viewMode === 'date' ? (
-            <Grid container spacing={2}>
-              {notes.map((note) => (
-                <Grid item xs={12} sm={6} md={4} key={note.id}>
-                  <Card
-                    onMouseEnter={() => setHoveredNoteId(note.id)}
-                    onMouseLeave={() => setHoveredNoteId(null)}
-                    sx={{
-                      position: 'relative',
-                      '& .note-actions': {
-                        opacity: 0,
-                        transition: 'opacity 0.2s ease-in-out',
-                        position: 'absolute',
-                        bottom: 8,
-                        right: 8,
-                        display: 'flex',
-                        gap: 1,
-                        zIndex: 1,
-                        '& .MuiIconButton-root': {
-                          backgroundColor: isDarkMode 
-                            ? alpha(theme.colors.dark.primary, 0.1)
-                            : alpha(theme.colors.light.primary, 0.1),
-                          padding: '4px',
-                          boxShadow: 2,
-                          '&:hover': {
-                            backgroundColor: isDarkMode 
-                              ? alpha(theme.colors.dark.primary, 0.2)
-                              : alpha(theme.colors.light.primary, 0.2),
-                          }
-                        }
-                      },
-                      '&:hover .note-actions': {
-                        opacity: 1,
-                      },
-                    }}
-                  >
-                    <CardContent>
-                      <Typography variant="h6" gutterBottom>
-                        {note.title}
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        color="text.secondary"
-                        sx={{
-                          mb: 2,
-                          display: '-webkit-box',
-                          WebkitLineClamp: expandedNotes.has(note.id) ? undefined : 3,
-                          WebkitBoxOrient: 'vertical',
-                          overflow: expandedNotes.has(note.id) ? 'visible' : 'hidden',
-                          cursor: 'pointer',
-                        }}
-                        onClick={() => toggleNoteExpansion(note.id)}
-                      >
-                        {note.content}
-                      </Typography>
-                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                        {note.tags.map((tag) => (
-                          <Chip key={tag} label={tag} size="small" />
-                        ))}
-                      </Box>
-                      <Box
-                        className="note-actions"
-                        sx={{ 
-                          display: 'flex', 
-                          '& .MuiIconButton-root': {
-                            backgroundColor: isDarkMode 
-                              ? alpha(theme.colors.dark.primary, 0.1)
-                              : alpha(theme.colors.light.primary, 0.1),
-                            padding: '4px',
-                            boxShadow: 2,
-                            '&:hover': {
-                              backgroundColor: isDarkMode 
-                                ? alpha(theme.colors.dark.primary, 0.2)
-                                : alpha(theme.colors.light.primary, 0.2),
-                            }
-                          }
-                        }}
-                      >
-                        <Tooltip title="Edit note (E)" arrow placement="top">
-                          <IconButton
-                            size="small"
-                            onClick={() => handleEditNote(note)}
+            <div className="w-full space-y-4 mt-4">
+              {Object.entries(groupedNotes)
+                .sort(([dateA], [dateB]) => dateB.localeCompare(dateA))
+                .map(([date, notes]) => (
+                  <div key={date}>
+                    <h2 className="text-lg font-semibold mb-2 mt-8 text-gray-700 dark:text-gray-300">
+                      {format(new Date(date), 'EEEE, MMMM d, yyyy')}
+                    </h2>
+                    <Grid container spacing={2}>
+                      {notes.map((note) => (
+                        <Grid item xs={12} sm={6} key={note.id}>
+                          <Card
+                            onMouseEnter={() => setHoveredNoteId(note.id)}
+                            onMouseLeave={() => setHoveredNoteId(null)}
+                            sx={{
+                              height: '100%',  // This ensures cards in the same row have equal height
+                              position: 'relative',
+                              '& .note-actions': {
+                                opacity: 0,
+                                transition: 'opacity 0.2s ease-in-out',
+                                position: 'absolute',
+                                bottom: 8,
+                                right: 8,
+                                display: 'flex',
+                                gap: 1,
+                                zIndex: 1,
+                                '& .MuiIconButton-root': {
+                                  backgroundColor: isDarkMode 
+                                    ? alpha(theme.colors.dark.primary, 0.1)
+                                    : alpha(theme.colors.light.primary, 0.1),
+                                  padding: '4px',
+                                  boxShadow: 2,
+                                  '&:hover': {
+                                    backgroundColor: isDarkMode 
+                                      ? alpha(theme.colors.dark.primary, 0.2)
+                                      : alpha(theme.colors.light.primary, 0.2),
+                                  }
+                                }
+                              },
+                              '&:hover .note-actions': {
+                                opacity: 1,
+                              },
+                            }}
                           >
-                            <EditIcon sx={{ fontSize: 18 }} />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Delete note (D)" arrow placement="top">
-                          <IconButton
-                            size="small"
-                            onClick={() => deleteNote(note.id)}
-                          >
-                            <DeleteIcon sx={{ fontSize: 18 }} />
-                          </IconButton>
-                        </Tooltip>
-                      </Box>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
+                            <CardContent>
+                              <Typography variant="h6" gutterBottom>
+                                {note.title}
+                              </Typography>
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                                sx={{
+                                  mb: 2,
+                                  display: '-webkit-box',
+                                  WebkitLineClamp: expandedNotes.has(note.id) ? undefined : 3,
+                                  WebkitBoxOrient: 'vertical',
+                                  overflow: expandedNotes.has(note.id) ? 'visible' : 'hidden',
+                                  cursor: 'pointer',
+                                }}
+                                onClick={() => toggleNoteExpansion(note.id)}
+                              >
+                                {note.content}
+                              </Typography>
+                              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                {note.tags.map((tag) => (
+                                  <Chip key={tag} label={tag} size="small" />
+                                ))}
+                              </Box>
+                              <Box
+                                className="note-actions"
+                                sx={{ 
+                                  display: 'flex', 
+                                  '& .MuiIconButton-root': {
+                                    backgroundColor: isDarkMode 
+                                      ? alpha(theme.colors.dark.primary, 0.1)
+                                      : alpha(theme.colors.light.primary, 0.1),
+                                    padding: '4px',
+                                    boxShadow: 2,
+                                    '&:hover': {
+                                      backgroundColor: isDarkMode 
+                                        ? alpha(theme.colors.dark.primary, 0.2)
+                                        : alpha(theme.colors.light.primary, 0.2),
+                                    }
+                                  }
+                                }}
+                              >
+                                <Tooltip title="Edit note (E)" arrow placement="top">
+                                  <IconButton
+                                    size="small"
+                                    onClick={() => handleEditNote(note)}
+                                  >
+                                    <EditIcon sx={{ fontSize: 18 }} />
+                                  </IconButton>
+                                </Tooltip>
+                                <Tooltip title="Delete note (D)" arrow placement="top">
+                                  <IconButton
+                                    size="small"
+                                    onClick={() => deleteNote(note.id)}
+                                  >
+                                    <DeleteIcon sx={{ fontSize: 18 }} />
+                                  </IconButton>
+                                </Tooltip>
+                              </Box>
+                            </CardContent>
+                          </Card>
+                        </Grid>
+                      ))}
+                    </Grid>
+                  </div>
+                ))}
+            </div>
           ) : (
             <Stack spacing={4}>
               {notesByTags.map(([tag, notes]) => (
