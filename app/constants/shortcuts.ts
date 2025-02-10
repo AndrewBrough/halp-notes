@@ -19,6 +19,10 @@ export const SHORTCUTS = {
     keys: ['D'],
     description: 'Delete hovered or tabbed over note'
   },
+  OPEN_MENU: {
+    keys: ['H'],
+    description: 'Open main menu'
+  }
 } as const;
 
 // Helper to format the shortcut for display

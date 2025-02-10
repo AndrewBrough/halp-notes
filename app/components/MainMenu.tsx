@@ -11,13 +11,14 @@ import {
   ListItemText,
   Switch,
   Collapse,
+  Tooltip,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import KeyboardIcon from '@mui/icons-material/Keyboard';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import RestoreIcon from '@mui/icons-material/Restore';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNotes } from '../context/NotesContext';
 import { SHORTCUTS, formatShortcut } from '../constants/shortcuts';
 import { useTheme } from '../context/ThemeContext';
@@ -36,6 +37,18 @@ export const MainMenu = () => {
     themeOptions 
   } = useTheme();
 
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.key.toLowerCase() === 'h') {
+        event.preventDefault();
+        setIsOpen(true);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyPress);
+    return () => document.removeEventListener('keydown', handleKeyPress);
+  }, []);
+
   const handleClose = () => {
     setIsOpen(false);
   };
@@ -47,15 +60,21 @@ export const MainMenu = () => {
 
   return (
     <>
-      <IconButton
-        onClick={() => setIsOpen(true)}
-        size="large"
-        edge="end"
-        color="inherit"
-        aria-label="menu"
+      <Tooltip 
+        title={`Open menu (${formatShortcut(SHORTCUTS.OPEN_MENU.keys)})`} 
+        arrow 
+        placement="bottom"
       >
-        <MenuIcon />
-      </IconButton>
+        <IconButton
+          onClick={() => setIsOpen(true)}
+          size="large"
+          edge="end"
+          color="inherit"
+          aria-label="Open main menu"
+        >
+          <MenuIcon />
+        </IconButton>
+      </Tooltip>
       <Drawer
         anchor="right"
         open={isOpen}
