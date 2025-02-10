@@ -1,5 +1,5 @@
 import { TextField } from '@mui/material';
-import { alpha, useTheme } from '@mui/material/styles';
+import { alpha } from '@mui/material/styles';
 import { useNotes } from '../context/NotesContext';
 import InputAdornment from '@mui/material/InputAdornment';
 import HistoryIcon from '@mui/icons-material/History';
@@ -7,10 +7,12 @@ import Tooltip from '@mui/material/Tooltip';
 import { useRef, useEffect } from 'react';
 import { isInputFocused } from '../utils/keyboard';
 import SearchIcon from '@mui/icons-material/Search';
+import { useTheme } from '../context/ThemeContext';
+
 
 export default function SearchBar() {
   const { searchQuery, setSearchQuery, notes } = useNotes();
-  const theme = useTheme();
+  const { theme, isDarkMode } = useTheme();
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -56,6 +58,9 @@ export default function SearchBar() {
               '.MuiSvgIcon-root': {
                 fontSize: '1.2rem',
                 transition: 'transform 0.2s ease-in-out',
+                color: isDarkMode 
+                  ? alpha(theme.colors.dark.primary, 0.8)
+                  : alpha(theme.colors.light.primary, 0.8),
               },
               '.MuiInputBase-root:hover &': {
                 '.MuiSvgIcon-root': {
@@ -69,7 +74,7 @@ export default function SearchBar() {
               }
             }}
           >
-            <SearchIcon color="action" />
+            <SearchIcon />
           </InputAdornment>
         ),
         endAdornment: hasVersionMatches && (
@@ -83,7 +88,7 @@ export default function SearchBar() {
       sx={{
         mb: 2,
         '& .MuiInputBase-root': {
-          backgroundColor: alpha(theme.palette.primary.main, 0.05),
+          backgroundColor: alpha(isDarkMode ? theme.colors.dark.primary : theme.colors.light.primary, 0.05),
           transition: 'padding-left 0.2s ease-in-out',
           paddingLeft: '32px',
           '&.Mui-focused': {

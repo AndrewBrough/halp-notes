@@ -32,6 +32,26 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            try {
+              const isDark = localStorage.getItem('isDarkMode') === 'true';
+              const themeKey = localStorage.getItem('themeKey') || 'gold';
+              const themes = {
+                gold: { light: '#fffdf5', dark: '#1a1500' },
+                purple: { light: '#faf5fb', dark: '#1a071d' },
+                ocean: { light: '#f5f5f5', dark: '#0a1929' },
+                forest: { light: '#f5faf5', dark: '#071a07' }
+              };
+              document.documentElement.style.backgroundColor = 
+                isDark ? themes[themeKey].dark : themes[themeKey].light;
+            } catch (e) {
+              document.documentElement.style.backgroundColor = '#fffdf5';
+            }
+          `
+        }} />
+      </head>
       <body className={inter.className}>
         <ClientLayout>
           {children}

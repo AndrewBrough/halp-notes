@@ -100,9 +100,6 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-function isValidThemeKey(key: string): key is ThemeKey {
-  return key in THEMES;
-}
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [currentTheme, setCurrentTheme] = useState<ThemeKey>(() => {

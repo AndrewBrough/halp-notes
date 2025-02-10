@@ -56,7 +56,7 @@ export default function Home() {
   const { 
     theme, 
     isDarkMode, 
-    muiTheme 
+    muiTheme
   } = useTheme();
 
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -166,7 +166,9 @@ export default function Home() {
           position="static" 
           elevation={0}
           sx={{ 
-            backgroundColor: 'transparent',
+            backgroundColor: isDarkMode 
+              ? theme.colors.dark.background 
+              : theme.colors.light.background,
             mb: 4 
           }}
         >
@@ -178,7 +180,10 @@ export default function Home() {
                 flexGrow: 1,
                 fontSize: '2.5rem',
                 display: 'flex',
-                alignItems: 'baseline'
+                alignItems: 'baseline',
+                color: isDarkMode 
+                  ? theme.colors.dark.primary 
+                  : theme.colors.light.primary
               }}
             >
               <span className={cedarville.className}>Halp</span>
@@ -186,7 +191,13 @@ export default function Home() {
                 notes
               </span>
             </Typography>
-            <MainMenu />
+            <MainMenu 
+              sx={{ 
+                color: isDarkMode 
+                  ? theme.colors.dark.primary 
+                  : theme.colors.light.primary
+              }} 
+            />
           </Toolbar>
         </AppBar>
         <Container maxWidth="md" sx={{ mb: 4 }}>
@@ -216,14 +227,14 @@ export default function Home() {
                         zIndex: 1,
                         '& .MuiIconButton-root': {
                           backgroundColor: isDarkMode 
-                            ? theme.colors.dark.background 
-                            : theme.colors.light.background,
+                            ? alpha(theme.colors.dark.primary, 0.1)
+                            : alpha(theme.colors.light.primary, 0.1),
                           padding: '4px',
                           boxShadow: 2,
                           '&:hover': {
                             backgroundColor: isDarkMode 
-                              ? alpha(theme.colors.dark.primary, 0.1)
-                              : alpha(theme.colors.light.primary, 0.1),
+                              ? alpha(theme.colors.dark.primary, 0.2)
+                              : alpha(theme.colors.light.primary, 0.2),
                           }
                         }
                       },
@@ -264,8 +275,8 @@ export default function Home() {
                             backgroundColor: isDarkMode 
                               ? alpha(theme.colors.dark.primary, 0.1)
                               : alpha(theme.colors.light.primary, 0.1),
-                            minWidth: '32px',
-                            minHeight: '32px',
+                            padding: '4px',
+                            boxShadow: 2,
                             '&:hover': {
                               backgroundColor: isDarkMode 
                                 ? alpha(theme.colors.dark.primary, 0.2)
@@ -347,14 +358,14 @@ export default function Home() {
                                 zIndex: 1,
                                 '& .MuiIconButton-root': {
                                   backgroundColor: isDarkMode 
-                                    ? theme.colors.dark.background 
-                                    : theme.colors.light.background,
+                                    ? alpha(theme.colors.dark.primary, 0.1)
+                                    : alpha(theme.colors.light.primary, 0.1),
                                   padding: '4px',
                                   boxShadow: 2,
                                   '&:hover': {
                                     backgroundColor: isDarkMode 
-                                      ? alpha(theme.colors.dark.primary, 0.1)
-                                      : alpha(theme.colors.light.primary, 0.1),
+                                      ? alpha(theme.colors.dark.primary, 0.2)
+                                      : alpha(theme.colors.light.primary, 0.2),
                                   }
                                 }
                               },
@@ -395,8 +406,8 @@ export default function Home() {
                                     backgroundColor: isDarkMode 
                                       ? alpha(theme.colors.dark.primary, 0.1)
                                       : alpha(theme.colors.light.primary, 0.1),
-                                    minWidth: '32px',
-                                    minHeight: '32px',
+                                    padding: '4px',
+                                    boxShadow: 2,
                                     '&:hover': {
                                       backgroundColor: isDarkMode 
                                         ? alpha(theme.colors.dark.primary, 0.2)

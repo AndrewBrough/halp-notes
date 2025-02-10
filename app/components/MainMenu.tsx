@@ -25,7 +25,11 @@ import { useTheme } from '../context/ThemeContext';
 import PaletteIcon from '@mui/icons-material/Palette';
 import { isInputFocused } from '../utils/keyboard';
 
-export const MainMenu = () => {
+interface MainMenuProps {
+  sx?: object;
+}
+
+export const MainMenu = ({ sx }: MainMenuProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [showThemeOptions, setShowThemeOptions] = useState(false);
   const { restoreTutorialNotes } = useNotes();
@@ -72,7 +76,7 @@ export const MainMenu = () => {
           onClick={() => setIsOpen(true)}
           size="large"
           edge="end"
-          color="inherit"
+          sx={sx}
           aria-label="Open main menu"
         >
           <MenuIcon />

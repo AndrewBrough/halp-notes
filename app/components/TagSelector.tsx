@@ -1,14 +1,15 @@
 import { Autocomplete, Chip, TextField, InputAdornment } from '@mui/material';
-import { alpha, useTheme } from '@mui/material/styles';
+import { alpha } from '@mui/material/styles';
 import { useNotes } from '../context/NotesContext';
 import { useState, useEffect, useRef } from 'react';
 import { createFilterOptions } from '@mui/material/Autocomplete';
 import { isInputFocused } from '../utils/keyboard';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import { useTheme } from '../context/ThemeContext';
 
 export default function TagSelector() {
   const { tags, selectedTags, setSelectedTags } = useNotes();
-  const theme = useTheme();
+  const { theme, isDarkMode } = useTheme();
   const [inputValue, setInputValue] = useState('');
   const [, forceUpdate] = useState({});
   const filterInputRef = useRef<HTMLInputElement>(null);
@@ -74,7 +75,7 @@ export default function TagSelector() {
       filterOptions={filterOptions}
       sx={{
         '& .MuiInputBase-root': {
-          backgroundColor: alpha(theme.palette.primary.main, 0.05),
+          backgroundColor: alpha(isDarkMode ? theme.colors.dark.primary : theme.colors.light.primary, 0.05),
           transition: 'padding-left 0.2s ease-in-out',
           paddingLeft: '32px',
           '&.Mui-focused': {
@@ -107,6 +108,9 @@ export default function TagSelector() {
                     '.MuiSvgIcon-root': {
                       fontSize: '1.2rem',
                       transition: 'transform 0.2s ease-in-out',
+                      color: isDarkMode 
+                        ? alpha(theme.colors.dark.primary, 0.8)
+                        : alpha(theme.colors.light.primary, 0.8),
                     },
                     '.MuiInputBase-root:hover &': {
                       '.MuiSvgIcon-root': {
@@ -120,7 +124,7 @@ export default function TagSelector() {
                     }
                   }}
                 >
-                  <LocalOfferIcon color="action" />
+                  <LocalOfferIcon />
                 </InputAdornment>
                 {params.InputProps.startAdornment}
               </>
