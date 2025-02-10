@@ -2,16 +2,21 @@ import { MetadataRoute } from 'next'
  
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Notes App',
-    short_name: 'Notes',
+    name: 'Halp notes',
+    short_name: 'Halp',
     description: 'A simple notes app with tags',
     start_url: '/',
     display: 'standalone',
     background_color: '#ffffff',
-    theme_color: '#1976d2',
+    theme_color: '#ffc107',
     icons: [
       {
         src: '/icon.png',
+        sizes: '50x50',
+        type: 'image/png',
+      },
+      {
+        src: '/icon-192.png',
         sizes: '192x192',
         type: 'image/png',
       },
