@@ -1,4 +1,4 @@
-import { Menu, MenuItem, IconButton, Divider, Typography, Chip } from '@mui/material';
+import { Menu, MenuItem, IconButton, Divider, Typography, Chip, Box, Button } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import KeyboardIcon from '@mui/icons-material/Keyboard';
@@ -41,12 +41,18 @@ export const MainMenu = () => {
         open={open}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleRestoreTutorials}>
-          <HelpOutlineIcon sx={{ mr: 1 }} />
-          Restore Tutorial Notes
-        </MenuItem>
+        <Box sx={{ p: 2 }}>
+          <Button
+            onClick={handleRestoreTutorials}
+            startIcon={<HelpOutlineIcon />}
+            variant="outlined"
+            fullWidth
+          >
+            Restore Tutorial Notes
+          </Button>
+        </Box>
         <Divider />
-        <MenuItem sx={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+        <Box sx={{ p: 2 }}>
           <Typography
             variant="subtitle2"
             sx={{ display: 'flex', alignItems: 'center', mb: 1 }}
@@ -81,7 +87,7 @@ export const MainMenu = () => {
               {shortcut.description}
             </Typography>
           ))}
-        </MenuItem>
+        </Box>
       </Menu>
     </>
   );
