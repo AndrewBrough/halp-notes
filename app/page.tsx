@@ -245,7 +245,8 @@ export default function Home() {
                   alignItems: 'baseline',
                   color: isDarkMode 
                     ? theme.colors.dark.primary 
-                    : theme.colors.light.primary
+                    : theme.colors.light.primary,
+                  mt: 2
                 }}
               >
                 <span className={cedarville.className}>Halp</span>
