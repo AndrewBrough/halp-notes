@@ -5,7 +5,8 @@ import {
   ListItemIcon, 
   ListItemText, 
   Switch, 
-  Collapse 
+  Collapse,
+  Typography
 } from '@mui/material';
 import PaletteIcon from '@mui/icons-material/Palette';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
@@ -19,7 +20,6 @@ interface ThemeSectionProps {
 }
 
 export function ThemeSection({ buttonSx }: ThemeSectionProps) {
-  const [showThemeOptions, setShowThemeOptions] = useState(false);
   const { 
     theme: currentTheme, 
     isDarkMode, 
@@ -30,58 +30,54 @@ export function ThemeSection({ buttonSx }: ThemeSectionProps) {
   } = useTheme();
 
   return (
-    <>
-      <Button
-        onClick={() => setShowThemeOptions(!showThemeOptions)}
-        startIcon={<PaletteIcon />}
-        variant="contained"
-        fullWidth
-        sx={buttonSx}
+      <Box sx={{ mb: 2 }}>
+      <Typography 
+        variant="overline" 
+        sx={{ 
+          display: 'block',
+          
+        }}
       >
+        <PaletteIcon sx={{ mr: 1 }} />
         Customize Theme
-      </Button>
-
-      <Collapse in={showThemeOptions} timeout="auto">
-        <Box sx={{ mb: 2 }}>
-          {themeOptions.map((option) => (
-            <MenuItem
-              key={option.value}
-              onClick={() => setTheme(option)}
-              selected={option.value === currentTheme.value}
-              sx={{ width: '100%', textAlign: 'left' }}
-            >
-              <ListItemIcon>
-                <div
-                  style={{
-                    width: 20,
-                    height: 20,
-                    borderRadius: '50%',
-                    background: option.colors.light.primary,
-                  }}
-                />
-              </ListItemIcon>
-              <ListItemText sx={{ textAlign: 'left' }}>{option.name}</ListItemText>
-            </MenuItem>
-          ))}
-          <MenuItem sx={{ width: '100%', textAlign: 'left' }}>
+      </Typography>
+        {themeOptions.map((option) => (
+          <MenuItem
+            key={option.value}
+            onClick={() => setTheme(option)}
+            selected={option.value === currentTheme.value}
+            sx={{ width: '100%', textAlign: 'left' }}
+          >
             <ListItemIcon>
-              <DarkModeIcon />
+              <div
+                style={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: '50%',
+                  background: option.colors.light.primary,
+                }}
+              />
             </ListItemIcon>
-            <ListItemText sx={{ textAlign: 'left' }}>Dark Mode</ListItemText>
-            <Switch
-              edge="end"
-              checked={isDarkMode}
-              onChange={(e) => setIsDarkMode(e.target.checked)}
-            />
+            <ListItemText sx={{ textAlign: 'left' }}>{option.name}</ListItemText>
           </MenuItem>
-          <MenuItem onClick={resetTheme} sx={{ width: '100%', textAlign: 'left' }}>
-            <ListItemIcon>
-              <RestoreIcon />
-            </ListItemIcon>
-            <ListItemText sx={{ textAlign: 'left' }}>Reset to Default</ListItemText>
-          </MenuItem>
-        </Box>
-      </Collapse>
-    </>
+        ))}
+        <MenuItem sx={{ width: '100%', textAlign: 'left' }}>
+          <ListItemIcon>
+            <DarkModeIcon />
+          </ListItemIcon>
+          <ListItemText sx={{ textAlign: 'left' }}>Dark Mode</ListItemText>
+          <Switch
+            edge="end"
+            checked={isDarkMode}
+            onChange={(e) => setIsDarkMode(e.target.checked)}
+          />
+        </MenuItem>
+        <MenuItem onClick={resetTheme} sx={{ width: '100%', textAlign: 'left' }}>
+          <ListItemIcon>
+            <RestoreIcon />
+          </ListItemIcon>
+          <ListItemText sx={{ textAlign: 'left' }}>Reset to Default</ListItemText>
+        </MenuItem>
+      </Box>
   );
 } 

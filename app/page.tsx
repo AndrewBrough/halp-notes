@@ -297,13 +297,11 @@ export default function Home() {
                       <Typography 
                         variant="h6" 
                         component="h2" 
-                        className="text-lg font-normal mt-8 text-gray-700 dark:text-gray-300"
                       >
                         {format(new Date(date), 'EEEE, MMMM d, yyyy')}
                       </Typography>
                       <Typography 
                         variant="body2" 
-                        color="text.secondary" 
                         sx={{ ml: 2 }}
                       >
                         {notes.length} note{notes.length !== 1 ? 's' : ''}
@@ -436,7 +434,6 @@ export default function Home() {
                     </Typography>
                     <Typography 
                       variant="body2" 
-                      color="text.secondary" 
                       sx={{ ml: 2 }}
                     >
                       {notes.length} note{notes.length !== 1 ? 's' : ''}
