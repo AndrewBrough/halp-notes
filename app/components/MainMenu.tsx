@@ -5,18 +5,38 @@ import {
   Chip, 
   Box, 
   Button,
-  Drawer
+  Drawer,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
+  Switch,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import KeyboardIcon from '@mui/icons-material/Keyboard';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import SettingsBrightnessIcon from '@mui/icons-material/SettingsBrightness';
+import RestoreIcon from '@mui/icons-material/Restore';
 import { useState } from 'react';
 import { useNotes } from '../context/NotesContext';
 import { SHORTCUTS, formatShortcut } from '../constants/shortcuts';
+import { useTheme } from '../hooks/useTheme';
+import Tooltip from '@mui/material/Tooltip';
+import PaletteIcon from '@mui/icons-material/Palette';
 
 export const MainMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [showThemeOptions, setShowThemeOptions] = useState(false);
   const { restoreTutorialNotes } = useNotes();
+  const { 
+    theme: currentTheme, 
+    isDarkMode, 
+    isDarkModeAuto, 
+    setTheme, 
+    setIsDarkMode, 
+    resetTheme,
+    themeOptions 
+  } = useTheme();
 
   const handleClose = () => {
     setIsOpen(false);
@@ -44,6 +64,77 @@ export const MainMenu = () => {
         onClose={handleClose}
       >
         <Box sx={{ width: 280, p: 2 }}>
+          <Button
+            onClick={() => setShowThemeOptions(!showThemeOptions)}
+            startIcon={<PaletteIcon />}
+            variant="outlined"
+            fullWidth
+            sx={{ mb: showThemeOptions ? 2 : 0 }}
+          >
+            Customize Theme
+          </Button>
+
+          {showThemeOptions && (
+            <>
+              {themeOptions.map((option) => (
+                <MenuItem
+                  key={option.value}
+                  onClick={() => setTheme(option)}
+                  selected={option.value === currentTheme.value}
+                >
+                  <ListItemIcon>
+                    <div
+                      style={{
+                        width: 20,
+                        height: 20,
+                        borderRadius: '50%',
+                        background: option.colors.light.primary,
+                      }}
+                    />
+                  </ListItemIcon>
+                  <ListItemText>{option.name}</ListItemText>
+                </MenuItem>
+              ))}
+              <MenuItem onClick={() => setIsDarkMode(!isDarkMode)}>
+                <ListItemIcon>
+                  <DarkModeIcon />
+                </ListItemIcon>
+                <ListItemText>Dark Mode</ListItemText>
+                <Switch
+                  edge="end"
+                  checked={isDarkMode}
+                  disabled={isDarkModeAuto}
+                  onChange={(e) => setIsDarkMode(e.target.checked)}
+                />
+              </MenuItem>
+              <MenuItem onClick={() => setIsDarkMode('auto')}>
+                <Tooltip 
+                  title="Will automatically change to dark mode after sunset and before sunrise"
+                  placement="right"
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
+                    <ListItemIcon>
+                      <SettingsBrightnessIcon />
+                    </ListItemIcon>
+                    <ListItemText>Auto Dark Mode</ListItemText>
+                  </div>
+                </Tooltip>
+                <Switch
+                  edge="end"
+                  checked={isDarkModeAuto}
+                  onChange={(e) => setIsDarkMode(e.target.checked ? 'auto' : false)}
+                />
+              </MenuItem>
+              <MenuItem onClick={resetTheme}>
+                <ListItemIcon>
+                  <RestoreIcon />
+                </ListItemIcon>
+                <ListItemText>Reset to Default</ListItemText>
+              </MenuItem>
+            </>
+          )}
+
+          <Divider sx={{ my: 2 }} />
           <Button
             onClick={handleRestoreTutorials}
             startIcon={<HelpOutlineIcon />}

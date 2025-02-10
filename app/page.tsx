@@ -23,14 +23,13 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useNotes } from './context/NotesContext';
 import { useTheme } from './hooks/useTheme';
 import NoteDialog from './components/NoteDialog';
-import ThemeMenu from './components/ThemeMenu';
-import { Note } from './types';
-import ClientOnly from './components/ClientOnly';
 import { MainMenu } from './components/MainMenu';
 import SearchBar from './components/SearchBar';
 import TagSelector from './components/TagSelector';
 import NewNoteButton from './components/NewNoteButton';
 import { SHORTCUTS } from './constants/shortcuts';
+import ClientOnly from './components/ClientOnly';
+import { Note } from './types';
 
 export default function Home() {
   const {
@@ -171,15 +170,6 @@ export default function Home() {
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               Halp Notes
             </Typography>
-            <ThemeMenu
-              currentTheme={theme}
-              isDarkMode={isDarkMode}
-              isDarkModeAuto={isDarkModeAuto}
-              onThemeChange={setTheme}
-              onDarkModeChange={setIsDarkMode}
-              onReset={resetTheme}
-              themeOptions={themeOptions}
-            />
           </Toolbar>
         </AppBar>
         <Container maxWidth="md" sx={{ mb: 4 }}>
