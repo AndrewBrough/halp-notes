@@ -91,6 +91,20 @@ export default function TagSelector() {
             }
           }
         },
+        '& .MuiAutocomplete-paper': {
+          backgroundColor: isDarkMode ? theme.colors.dark.background : theme.colors.light.background,
+          color: isDarkMode ? theme.colors.dark.primary : theme.colors.light.primary,
+        },
+        '& .MuiAutocomplete-listbox': {
+          '& .MuiAutocomplete-option': {
+            '&[aria-selected="true"]': {
+              backgroundColor: alpha(isDarkMode ? theme.colors.dark.primary : theme.colors.light.primary, 0.15),
+            },
+            '&.Mui-focused': {
+              backgroundColor: alpha(isDarkMode ? theme.colors.dark.primary : theme.colors.light.primary, 0.08),
+            },
+          },
+        },
       }}
       renderInput={(params) => (
         <TextField 
