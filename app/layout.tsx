@@ -32,7 +32,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" style={{ height: '100%' }}>
       <head>
         <script dangerouslySetInnerHTML={{
           __html: `
@@ -53,10 +53,12 @@ export default function RootLayout({
           `
         }} />
       </head>
-      <body className={inter.className}>
-        <ClientLayout>
-          {children}
-        </ClientLayout>
+      <body className={inter.className} style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+        <main>
+          <ClientLayout>
+            {children}
+          </ClientLayout>
+        </main>
       </body>
     </html>
   )
